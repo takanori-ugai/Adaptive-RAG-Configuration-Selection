@@ -7,9 +7,15 @@
 
 ## 概要図
 
-![ランキングモデルの学習](images/train.png)
+<div align="center">
+  <img src="images/train.png" alt="ランキングモデルの学習">
+  <p>図1: ランキングモデルの学習</p>
+</div>
 
-![ランキングモデルによる推論](images/inference.png)
+<div align="center">
+  <img src="images/inference.png" alt="ランキングモデルによる推論">
+  <p>図2: ランキングモデルによる推論</p>
+</div>
 
 ## 実行手順
 
