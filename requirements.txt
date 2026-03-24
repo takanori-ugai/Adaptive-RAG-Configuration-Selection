@@ -1,0 +1,23 @@
+# pip install -r requirements.txt
+# python -m spacy download en_core_web_sm
+numpy
+pandas
+spacy
+torch
+transformers
+tokenizers
+huggingface-hub
+bert-score
+yake
+python-dotenv
+gensim
+sentence_transformers
+matplotlib
+seaborn
+joblib
+scipy
+scikit-learn
+lightgbm
+xgboost
+catboost
+openpyxl

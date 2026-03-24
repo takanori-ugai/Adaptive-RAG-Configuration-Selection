@@ -1,0 +1,304 @@
+{
+  "type": "learning-to-rank",
+  "tasks": [
+    "precision",
+    "recall",
+    "f1",
+    "time"
+  ],
+  "models": [
+    "LightGBM",
+    "XGBoost",
+    "CatBoost"
+  ],
+  "categorical_cols": [
+    "rag_name",
+    "model_name",
+    "embedding_model_name",
+    "chain_type",
+    "chunk_size",
+    "chunk_overlap",
+    "question_type"
+  ],
+  "numeric_cols": [
+    "question_length_token",
+    "question_depth_of_dependency_structure_tree",
+    "document_length_token",
+    "cosine_similarity_of_question_and_document",
+    "cosine_similarity_of_question_and_document_keywords",
+    "cosine_similarity_of_question_named_entities_and_document_named_entities"
+  ],
+  "feature_cols_in_order": [
+    "rag_name",
+    "model_name",
+    "embedding_model_name",
+    "chain_type",
+    "chunk_size",
+    "chunk_overlap",
+    "question_type",
+    "question_length_token",
+    "question_depth_of_dependency_structure_tree",
+    "document_length_token",
+    "cosine_similarity_of_question_and_document",
+    "cosine_similarity_of_question_and_document_keywords",
+    "cosine_similarity_of_question_named_entities_and_document_named_entities"
+  ],
+  "holdout_metrics": {
+    "precision": {
+      "LightGBM": {
+        "NDCG@1": 0.7935546875,
+        "NDCG@3": 0.7997288314441009,
+        "NDCG@5": 0.8052036918426454,
+        "NDCG@10": 0.8196823810358371,
+        "NDCG@ALL": 0.8968826277868349,
+        "Hit@1": 0.725,
+        "Hit@3": 0.8,
+        "Hit@5": 0.8375,
+        "Hit@10": 0.925,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.3409684777063685,
+        "スピアマン": 0.417090373339197,
+        "ピアソン": 0.46985244361778566,
+        "fit_time_sec": 1.1077706813812256,
+        "num_queries": 80
+      },
+      "XGBoost": {
+        "NDCG@1": 0.83671875,
+        "NDCG@3": 0.8267654186803799,
+        "NDCG@5": 0.8253700400997058,
+        "NDCG@10": 0.8420048508063417,
+        "NDCG@ALL": 0.9092329729495606,
+        "Hit@1": 0.775,
+        "Hit@3": 0.8125,
+        "Hit@5": 0.85,
+        "Hit@10": 0.9375,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.3452368380258823,
+        "スピアマン": 0.42166239602463473,
+        "ピアソン": 0.48392900322926574,
+        "fit_time_sec": 0.6994218826293945,
+        "num_queries": 80
+      },
+      "CatBoost": {
+        "NDCG@1": 0.8140625,
+        "NDCG@3": 0.8119068052302829,
+        "NDCG@5": 0.8204599031419362,
+        "NDCG@10": 0.8452043308022829,
+        "NDCG@ALL": 0.9077012441594497,
+        "Hit@1": 0.75,
+        "Hit@3": 0.7625,
+        "Hit@5": 0.875,
+        "Hit@10": 0.9375,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.34052970037960184,
+        "スピアマン": 0.41594617906931186,
+        "ピアソン": 0.5139727388934802,
+        "fit_time_sec": 5.262218236923218,
+        "num_queries": 80
+      }
+    },
+    "recall": {
+      "LightGBM": {
+        "NDCG@1": 0.7095703125,
+        "NDCG@3": 0.7216030359009054,
+        "NDCG@5": 0.7243807907659428,
+        "NDCG@10": 0.7130962396371874,
+        "NDCG@ALL": 0.8619657387546823,
+        "Hit@1": 0.4625,
+        "Hit@3": 0.5625,
+        "Hit@5": 0.6125,
+        "Hit@10": 0.65,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.3656881320458044,
+        "スピアマン": 0.4718102516286903,
+        "ピアソン": 0.49633173206225695,
+        "fit_time_sec": 1.012559413909912,
+        "num_queries": 80
+      },
+      "XGBoost": {
+        "NDCG@1": 0.73515625,
+        "NDCG@3": 0.7373284203622573,
+        "NDCG@5": 0.7440783199278822,
+        "NDCG@10": 0.7319336489261634,
+        "NDCG@ALL": 0.8700212169576662,
+        "Hit@1": 0.4875,
+        "Hit@3": 0.55,
+        "Hit@5": 0.625,
+        "Hit@10": 0.6625,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.37197004509034864,
+        "スピアマン": 0.4793021428521821,
+        "ピアソン": 0.5087320589610015,
+        "fit_time_sec": 0.5565738677978516,
+        "num_queries": 80
+      },
+      "CatBoost": {
+        "NDCG@1": 0.7671875,
+        "NDCG@3": 0.7773153417635215,
+        "NDCG@5": 0.7789531198758809,
+        "NDCG@10": 0.7644769341103019,
+        "NDCG@ALL": 0.8823131496350427,
+        "Hit@1": 0.5125,
+        "Hit@3": 0.5875,
+        "Hit@5": 0.6125,
+        "Hit@10": 0.6875,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.3865207067692321,
+        "スピアマン": 0.49433713998466555,
+        "ピアソン": 0.5381800627656164,
+        "fit_time_sec": 7.042773008346558,
+        "num_queries": 80
+      }
+    },
+    "f1": {
+      "LightGBM": {
+        "NDCG@1": 0.7076171875,
+        "NDCG@3": 0.7116037554111021,
+        "NDCG@5": 0.7227481671385604,
+        "NDCG@10": 0.7269272296714246,
+        "NDCG@ALL": 0.8624687812210684,
+        "Hit@1": 0.5375,
+        "Hit@3": 0.6125,
+        "Hit@5": 0.6875,
+        "Hit@10": 0.8,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.42108391516125626,
+        "スピアマン": 0.5285529360479548,
+        "ピアソン": 0.5363972138798315,
+        "fit_time_sec": 1.019655704498291,
+        "num_queries": 80
+      },
+      "XGBoost": {
+        "NDCG@1": 0.7037109375,
+        "NDCG@3": 0.7175438797486884,
+        "NDCG@5": 0.73144038198406,
+        "NDCG@10": 0.7375444499766017,
+        "NDCG@ALL": 0.8650592440631769,
+        "Hit@1": 0.525,
+        "Hit@3": 0.625,
+        "Hit@5": 0.7,
+        "Hit@10": 0.775,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.42388197869840205,
+        "スピアマン": 0.5291612530699268,
+        "ピアソン": 0.5580586415081907,
+        "fit_time_sec": 0.5232648849487305,
+        "num_queries": 80
+      },
+      "CatBoost": {
+        "NDCG@1": 0.78671875,
+        "NDCG@3": 0.7852505574902071,
+        "NDCG@5": 0.788392177177659,
+        "NDCG@10": 0.7827703509001664,
+        "NDCG@ALL": 0.882594430855493,
+        "Hit@1": 0.6375,
+        "Hit@3": 0.65,
+        "Hit@5": 0.7625,
+        "Hit@10": 0.825,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.4311765542796362,
+        "スピアマン": 0.5372981659916795,
+        "ピアソン": 0.5817805077673236,
+        "fit_time_sec": 5.848788022994995,
+        "num_queries": 80
+      }
+    },
+    "time": {
+      "LightGBM": {
+        "NDCG@1": 0.9958984375,
+        "NDCG@3": 0.9988413561588402,
+        "NDCG@5": 0.9961879678081796,
+        "NDCG@10": 0.9882792146559172,
+        "NDCG@ALL": 0.9919102519096199,
+        "Hit@1": 0.7375,
+        "Hit@3": 1.0,
+        "Hit@5": 1.0,
+        "Hit@10": 1.0,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.7128184005995434,
+        "スピアマン": 0.8668421306217808,
+        "ピアソン": 0.8767499815117702,
+        "fit_time_sec": 2.616745948791504,
+        "num_queries": 80
+      },
+      "XGBoost": {
+        "NDCG@1": 0.9958984375,
+        "NDCG@3": 0.9988895347838339,
+        "NDCG@5": 0.9960824661782866,
+        "NDCG@10": 0.9904505844507714,
+        "NDCG@ALL": 0.9928737548825819,
+        "Hit@1": 0.7375,
+        "Hit@3": 1.0,
+        "Hit@5": 1.0,
+        "Hit@10": 1.0,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.7375995798882242,
+        "スピアマン": 0.8871015989888381,
+        "ピアソン": 0.872799818748933,
+        "fit_time_sec": 0.5094995498657227,
+        "num_queries": 80
+      },
+      "CatBoost": {
+        "NDCG@1": 0.9962890625,
+        "NDCG@3": 0.998957438741926,
+        "NDCG@5": 0.9961318079115223,
+        "NDCG@10": 0.9891458759452586,
+        "NDCG@ALL": 0.99277555576857,
+        "Hit@1": 0.7625,
+        "Hit@3": 1.0,
+        "Hit@5": 1.0,
+        "Hit@10": 1.0,
+        "Hit@ALL": 1.0,
+        "ケンドール": 0.7339229035978628,
+        "スピアマン": 0.8867731900500291,
+        "ピアソン": 0.861858551783433,
+        "fit_time_sec": 8.635881662368774,
+        "num_queries": 80
+      }
+    }
+  },
+  "saved_models": {
+    "precision": {
+      "LightGBM": "../artifacts/models/rank_precision_LightGBM.joblib",
+      "XGBoost": "../artifacts/models/rank_precision_XGBoost.joblib",
+      "CatBoost": "../artifacts/models/rank_precision_CatBoost.joblib"
+    },
+    "recall": {
+      "LightGBM": "../artifacts/models/rank_recall_LightGBM.joblib",
+      "XGBoost": "../artifacts/models/rank_recall_XGBoost.joblib",
+      "CatBoost": "../artifacts/models/rank_recall_CatBoost.joblib"
+    },
+    "f1": {
+      "LightGBM": "../artifacts/models/rank_f1_LightGBM.joblib",
+      "XGBoost": "../artifacts/models/rank_f1_XGBoost.joblib",
+      "CatBoost": "../artifacts/models/rank_f1_CatBoost.joblib"
+    },
+    "time": {
+      "LightGBM": "../artifacts/models/rank_time_LightGBM.joblib",
+      "XGBoost": "../artifacts/models/rank_time_XGBoost.joblib",
+      "CatBoost": "../artifacts/models/rank_time_CatBoost.joblib"
+    }
+  },
+  "split": {
+    "type": "GroupShuffleSplit",
+    "group_key": "question",
+    "test_size": 0.2,
+    "random_state": 42
+  },
+  "label_convention": "rel=1..64 (best=1,worst=64); trained_on_gain=65-rel; ndcg_exp_gain=False for XGB; CatBoost=YetiRank",
+  "metrics": [
+    "NDCG@1",
+    "NDCG@3",
+    "NDCG@5",
+    "NDCG@10",
+    "NDCG@ALL",
+    "Hit@1",
+    "Hit@3",
+    "Hit@5",
+    "Hit@10",
+    "Hit@ALL",
+    "ケンドール",
+    "スピアマン",
+    "ピアソン"
+  ]
+}

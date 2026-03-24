@@ -20,13 +20,10 @@ python -m spacy download en_core_web_sm
 ### ２. 準備
 
 NaiveRAG，LightRAG，GraphRAGで各RAG構成で実行します．
-ここでは．使用したコードは`make_data/`にあります．
-実行結果は，`data/raw/`に保存しておきます．
+使用したコードは`make_data/`に，実行結果は`data/raw/`に格納します．
 
 ### 3. ランキングモデルの構築
 
-あらかじめNaiveRAG，LightRAG，GraphRAGで各RAG構成で実行した結果を用意します．
-ここでは，`data/raw/`に用意しておきます．
 `train/pipeline/make_model.py`が以下をまとめて実行します．
 
 - `train/make_train_data.py`: 特徴量抽出と訓練データ構築
@@ -69,18 +66,8 @@ python src/pipeline/pilot_study.py
 - `data/train`: ランキングモデルの訓練データ
 - `data/test`: ランキングモデルのテストデータ
 
-### `src/`ディレクトリ
-
-- `src/`: 実行用のモジュール
-- `src/pipeline`: スクリプトによる一斉実行
-
 ### `artifacts/`ディレクトリ
 
-- `artifacts/figures`: 特徴量貢献度の図
 - `artifacts/models`: 学習済みランキングモデル
 - `artifacts/registry`: 学習済みランキングモデルのメタデータ
 - `artifacts/results`: 評価結果
-
-### `archive/`ディレクトリ
-
-- 固定RAG構成（標準設定，最頻出設定，オラクル設定）での実験
