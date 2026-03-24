@@ -84,3 +84,18 @@ python inference/pipeline/pilot_study.py
 - `artifacts/models`: 学習済みランキングモデル
 - `artifacts/registry`: 学習済みランキングモデルのメタデータ
 - `artifacts/results`: 評価結果
+
+## 引用
+
+本コードを使用される場合は，以下の文献を引用してください．
+
+```bibtex
+@article{anaguchi2026,
+    title = {コストと精度を考慮した質問と文書に基づく適応的RAG選択},
+    author = {穴口 史将 and チャクラボルティ シュデシナ and 森田 武史 and 太田 葵 and 浅田 真生 and 江上 周作 and 鵜飼 孝典 and 濱崎 雅弘},
+    journal = {言語処理学会第32回年次大会},
+    pages = {1--6},
+    volume = {B7-4},
+    year = {2026}
+}
+```
