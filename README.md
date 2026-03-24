@@ -19,7 +19,13 @@
 
 ## 実行手順
 
-### 1. 環境構築
+### 1. 準備
+
+NaiveRAG，LightRAG，GraphRAGで各RAG構成で実行します．
+各手法の本体コードや詳細，およびデータセットについては，それぞれの公式GitHubリポジトリを参照してください．
+使用したコードは`make_data/`に，実行結果は`data/raw/`に格納します．
+
+### 2. 環境構築
 
 Python 3.10.12で実装．
 以下のコマンドで必要なライブラリをインストールします．
@@ -28,11 +34,6 @@ Python 3.10.12で実装．
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 ```
-
-### ２. 準備
-
-NaiveRAG，LightRAG，GraphRAGで各RAG構成で実行します．
-使用したコードは`make_data/`に，実行結果は`data/raw/`に格納します．
 
 ### 3. ランキングモデルの学習
 
