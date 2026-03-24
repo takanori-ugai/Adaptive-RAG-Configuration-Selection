@@ -61,13 +61,13 @@ python inference/pipeline/make_model.py
 ## 単発実験
 
 新たな質問と文書に対して，適応的にRAG構成を選択します．
-`src/pipeline/pilot_study.py`が以下を実行します．
+`inference/pipeline/pilot_study.py`が以下を実行します．
 
-- `src/one_feature_extraction.py`: 特徴量抽出
-- `src/one_selection_rag.py`: RAG構成選択
+- `inference/one_feature_extraction.py`: 特徴量抽出
+- `inference/one_selection_rag.py`: RAG構成選択
 
 ```bash
-python src/pipeline/pilot_study.py
+python inference/pipeline/pilot_study.py
 ```
 
 ## ディレクトリ説明
