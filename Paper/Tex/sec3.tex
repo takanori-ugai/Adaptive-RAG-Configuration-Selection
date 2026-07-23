@@ -165,7 +165,10 @@ RMの目的変数は，適合率，再現率，$F_1$値，実行時間といっ�
 \paragraph{総合評価値の集約方式の背景}
 多目的の順位を統合するため，各観点の予測順位の逆数（Reciprocal Rank）を用いた線形結合によって，構成 $c$ の総合評価スコア $S(c; q, d)$ を定義する．
 \begin{equation}
-S(c; q, d) = \frac{W_{\mathrm{pre}}}{P_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{rec}}}{R_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{f_1}}}{{F_1}_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{time}}}{T_{\mathrm{rank}}(c; q, d)}
+\begin{aligned}
+S(c; q, d) = & \frac{W_{\mathrm{pre}}}{P_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{rec}}}{R_{\mathrm{rank}}(c; q, d)} \\
+& + \frac{W_{\mathrm{f_1}}}{{F_1}_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{time}}}{T_{\mathrm{rank}}(c; q, d)}
+\end{aligned}
 \label{eq1}
 \end{equation}
 ただし，各重視方針の重み $W$ は以下の制約を満たす．
