@@ -1,0 +1,9 @@
+{
+  "precision": 25.727839916944507,
+  "recall": 44.42528068611864,
+  "f1": 29.425723970634866,
+  "time": 10.327966001629829,
+  "num_questions": 80,
+  "num_rows": 80,
+  "classifier_source": "rule_based"
+}

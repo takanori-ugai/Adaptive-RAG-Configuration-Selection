@@ -4,6 +4,12 @@
 
 from __future__ import annotations
 
+import multiprocessing as mp
+try:
+    mp.set_start_method("spawn", force=True)
+except RuntimeError:
+    pass
+
 import os
 from collections.abc import Iterable
 from functools import lru_cache

@@ -58,6 +58,27 @@ python train/pipeline/make_model.py
 python inference/pipeline/make_model.py
 ```
 
+### 5. Adaptive-RAG ベースライン比較
+
+`inference/pipeline/adaptive_rag_baseline.py` が、`Experiment1.md` で設計した Adaptive-RAG 比較用の追加実験を実行します。
+
+- `inference/adaptive_rag_baseline.py`: クエリ複雑度の予測と、`No-Retrieval / Single-Step / Multi-Step` の代表構成へのルーティング
+
+```bash
+python inference/pipeline/adaptive_rag_baseline.py
+```
+
+### 6. 実データ生成フローからの一括実行
+
+`inference/pipeline/adaptive_rag_realdata.py` を使うと、実データの生成・ランキングモデル構築・Adaptive-RAG ベースライン評価までをまとめて実行できます。
+
+- `train/pipeline/make_model.py`: `data/raw/` から `data/test/test_all_ranks.csv` までを生成
+- `inference/adaptive_rag_baseline.py`: 生成済み実データを使って Adaptive-RAG 比較を実行
+
+```bash
+python inference/pipeline/adaptive_rag_realdata.py
+```
+
 ## 単発実験
 
 新たな質問と文書に対して，適応的にRAG構成を選択します．

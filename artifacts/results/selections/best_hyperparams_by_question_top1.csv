@@ -1,0 +1,81 @@
+question,rag_name,model_name,embedding_model_name,chain_type,chunk_size,chunk_overlap,time,precision,recall,f1
+" Which movie did Disney produce first,  The Many Adventures of Winnie the Pooh or Ride a Wild Pony?",lightrag,qwen3:14b,mxbai-embed-large,global,500,100,50.23708868026733,0.0,0.1999408453702926,0.0
+A Pair of Brown Eyes and Wild Mountain Thyme is based from what artists song?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.5827429294586182,0.192479595541954,0.7555122971534729,0.4267796576023102
+An Indy car race was held in the capital of the state where the performer of Mingus Plays Piano was born. Who won the race?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,2.076021909713745,0.0,0.0,0.0
+Are director of film Susanna Whipped Cream and director of film Le Salamandre both from the same country?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.907182931900024,0.0,0.9994811415672302,0.2688741385936737
+Armageddon in Retrospect was written by the author who was best known for what 1969 satire novel?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.3031065464019775,0.1416190713644027,0.1643332242965698,0.1561294049024582
+"Between Greyia and Calibanus, which genus contains more species?",naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,5.491198539733887,0.0,0.4196101725101471,0.1467765867710113
+Black Book starred the actress and writer of what heritage?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,7.106300115585327,0.9999621510505676,0.9999621510505676,0.999962329864502
+By which year did the American cars mpg start to improve?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.287879943847656,0.0,0.9993250370025636,0.0058092251420021
+Did John Updike and Tom Clancy both publish more than 15 bestselling novels?,graphrag,qwen3:14b,mxbai-embed-large,global,500,250,117.79630494117735,0.0,0.9994757175445556,0.19368477165699
+Early Western texts referencing the East describe the people as being what?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,8.712389707565308,1.0,1.0,1.0
+Electrolysis of what can be used to produce oxygen and hydrogen?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,6.4348790645599365,0.9993237853050232,0.9993237257003784,0.9993263483047484
+"For what invention was U.S. Patent 1,655,114 granted?",naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,6.454332113265991,0.41000697016716,0.7714263796806335,0.57337486743927
+For what purpose is oxygen used by animal life?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.247813701629639,0.999928653240204,0.999928653240204,0.9999289512634276
+How many other important people sent letters?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.150272846221924,0.1223222911357879,0.618960976600647,0.3321095705032348
+How many will the host committee dedicate to local charities?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,6.126728773117065,0.999741554260254,0.999741554260254,0.9997425079345704
+How might gravity effects be observed differently according to Newton?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,0.6768271923065186,0.2115871012210846,0.716405987739563,0.4262244999408722
+In what city is SAP Center located?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,3.886388063430786,0.9999030232429504,0.9999030232429504,0.9999033808708192
+In what city is the company that Fastjet Tanzania was originally founded as a part of prior to rebranding based?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.40474534034729,0.0,0.0,0.0
+In what part of Florida is Tom Denney's birthplace located?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.6865074634552002,0.3549051880836487,0.3813982009887695,0.3704618513584137
+In what year was the university where Sergei Aleksandrovich Tokarev was a professor founded?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,100,1.416081428527832,0.0,0.0,0.0
+In which county was James Finch born?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.6780083179473877,0.1579226702451706,0.0762863382697105,0.1191677749156951
+Isabella Kelly was born at a ruined castle characterized as one of the most isolated fortifications in Britain by who?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,6.997042179107666,0.6136403679847717,0.8262504935264587,0.7149319052696228
+Ken Pruitt  was a Republican member of an upper house of the legislature with how many members ?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,7.77716326713562,0.6066203117370605,0.8963083028793335,0.7413054704666138
+The facility where Robert Croft worked as a navy instructor was also known as?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.929872274398804,0.1007357239723205,0.3106737434864044,0.2005318254232406
+Were Gotthilf Heinrich Ernst Muhlenberg and Todd Williams of the same nationality?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,6.711764097213745,0.0269258990883827,0.999480664730072,0.3716827929019928
+What are the little tentacles that cydippids have called?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,100,0.6396300792694092,0.999870538711548,0.999870538711548,0.999871015548706
+What body of water includes the terrain feature where Coffee Swamp is located?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,6.693361520767212,0.2644960880279541,0.4205752313137054,0.3409373462200165
+What century did the author of A Treatise Concerning the Principles of Human Knowledge live in?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,5.843786716461182,0.3551989197731018,0.4875271618366241,0.4207717478275299
+What class of instrument does Apatim Majumdar play?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.647429943084717,0.0,0.645382821559906,0.0
+What color were the Bronco's uniforms in Super Bowl 50?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,0.5806379318237305,0.0,0.999298334121704,0.0
+What does the name of the topic that Eisenhower didn't discuss during the campaign stand for?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,9.796888589859009,0.6433461904525757,0.8311979174613953,0.7335715889930725
+What is an alternate way to make starch?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.135510921478272,0.5457672476768494,0.4621005654335022,0.5047743320465088
+What is the date of birth of Frederick Of Liege's father?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,7.779269695281982,0.999747633934021,0.999747633934021,0.9997485876083374
+What is the date of death of Peter Dale Scott's mother?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,6.972894191741943,1.0,1.0,1.0
+What is the experimental satellite which was the forerunner to the communication satellite of the operator of GSAT-7 called?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,2.2010886669158936,1.0,1.0,1.0
+"What is the name of the Australian specialist electronic music magazine that features avant-rock, experimental sound art, and experimental hip hop?",naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.412187814712524,1.0,1.0,1.0
+What is the place of birth of the composer of film Men With Brooms?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.707542419433594,0.0,0.1077183634042739,0.0
+What is the population of the city that Munsonville is in the northwest corner of?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.617178201675415,0.0,0.0,0.0
+What is the prize offered for finding a solution to P=NP?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,6.300799131393433,0.282970666885376,0.7248455286026001,0.4760409593582153
+What is the process of constructing a building or infrastructure?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,6.23780083656311,0.9999242424964904,0.9999241828918456,0.9999244809150696
+What type of image was Tesla thought to have accidentally taken a week prior to the announcement of its discovery?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.222482681274414,0.9998995661735536,0.9998995661735536,0.9998999834060668
+What was the 2017 population of the country where Bedari was made?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,2.557776927947998,0.0,0.0,0.0
+When did the father of Dahyabhai Patel die?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.631089210510254,0.99996417760849,0.99996417760849,0.9999643564224244
+When did the first mosque in the place where Marshall Islands International Airport is located open?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.7441904544830322,0.0,0.0,0.0
+When is the date of birth of the creator of A Burial at Ornans?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.92960786819458,0.0,0.0,0.0
+When was the Edict of Worms presented?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,3.965172529220581,0.9999936819076538,0.9999936819076538,0.9999936819076538
+Where did Maududi's books place Islam?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,6.261346578598023,0.7267395257949829,0.6080092191696167,0.6667008399963379
+Where did the arguer that the country Directive 10/2 called for actions against had become an imperialist power declare he would intervene in the Korean conflict?,naiverag,llama3.1:8b,mxbai-embed-large,map_reduce,500,50,9.849929094314575,0.0,0.0,0.0
+"Where did the director of film Nalini By Day, Nancy By Night graduate from?",naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.913546800613403,0.1720136702060699,0.0995464101433754,0.1380690634250641
+Where does Ulysses Kay's birth city hold NASCAR races?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.939703941345215,1.0,1.0,1.0
+Where does the founder of Les Films Du Losange work at?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.898366928100586,0.2143359184265136,0.0,0.0
+Where was the director of film Aylwin (Film) born?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.0229971408843994,0.0,0.0,0.0
+"Which ""Roseanne"" star is in Scream 2?",naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,5.286635875701904,0.3954665958881378,0.7484824061393738,0.5553750991821289
+Which actor does American Beauty and American Beauty have in common?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,6.890016317367554,0.9999991059303284,0.9999991059303284,0.9999991059303284
+Which country the director of film Hotel By The Hour is from?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.992905855178833,0.0308837108314037,0.0588932111859321,0.0483906529843807
+"Which film has the director born later, Battle Of Memories or The Wedding Of Lilli Marlene?",graphrag,llama3.1:8b,nomic-embed-text,local,1000,100,30.7588963508606,0.0,0.3916287422180176,0.1171465963125228
+"Which film has the director born later, Brutti Di Notte or Bir Türk'E Gönül Verdim?",naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,6.806874752044678,1.0,1.0,1.0
+"Which film has the director born later, Life Hits or It'S In The Air?",naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,0.9026060104370116,1.0,1.0,1.0
+"Which film has the director born later, The Fighting Demon or Blood Of The Losers?",naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,100,6.34325098991394,0.0,0.0,0.0
+"Which film has the director died later, The Life And Loves Of Tschaikovsky or Dokuz Dağın Efesi?",naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,8.387468099594116,0.1933400183916092,0.7225993275642395,0.4161049425601959
+"Which film has the director who was born first, Hanuman Patal Vijay or Young And Dangerous: The Prequel?",naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.0522191524505615,0.7201236486434937,0.8517528176307678,0.7845063209533691
+"Which film whose director is younger, A Night'S Adventure or Insaciable?",naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,4.932628154754639,0.0,0.0,0.0
+Which lunar probe was near the Apollo 12 crew's landing site?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,100,0.5788323879241943,0.9999351501464844,0.9999351501464844,0.9999353885650636
+Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.542696952819824,0.999989092350006,0.999989092350006,0.9999891519546508
+Which religion did Kublai prefer?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,0.6125266551971436,0.417999267578125,0.5074623227119446,0.4635414779186249
+Who does the narrator on How I Met Your Mother end up with?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,2.86551833152771,0.9993054866790771,0.0,0.0
+Who is Ieuan Ab Owain Glyndŵr's paternal grandfather?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.332372188568115,0.0614105872809886,0.1567046046257019,0.1106520965695381
+Who is Rostislav I Of Kiev's paternal grandfather?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,7.292856693267822,0.9998685121536256,0.9998684525489808,0.9998689889907836
+Who is Wisigard's father-in-law?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.068145275115967,0.0,0.2419159561395645,0.1004141867160797
+Who is the NFL's vice president of brand and creative?,naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,8.855375051498413,1.0,1.0,1.0
+Who is the child of the actor who is a cast member of Love in Pawn?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.735849380493164,0.0,0.0,0.0
+Who is the sibling of the actress who played Susan Walker in Miracle on 34th street?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,7.269153356552124,0.0,0.0,0.0
+"Who lived longer, Friedrich Paschen or Ernst Bessey?",naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,5.539926767349243,0.0,0.657895028591156,0.2101030498743057
+"Who released the song ""With or Without You"" first, Jai McDowall or U2?",naiverag,llama3.1:8b,mxbai-embed-large,stuff,250,50,7.306097507476807,0.999466836452484,0.999466836452484,0.9994688630104064
+"Who sing ""Home Alone Tonight"" with the performer of ""country Man""?",naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.8692762851715088,0.0,0.2190053761005401,0.0639375150203704
+Who was hung for assisting the attempted surrender of a defector from the American Continental Army to the British Army?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.3709633350372314,0.3623805642127991,0.6897876262664795,0.5117765665054321
+Who was the first president in the country where the Kamchatka Peninsula is located?,naiverag,llama3.1:8b,nomic-embed-text,stuff,250,50,7.706022262573242,0.0,0.0,0.0
+Who was the spouse of the leading lady in Gone With the wind?,naiverag,llama3.1:8b,nomic-embed-text,stuff,500,50,1.7436206340789795,0.0,0.0,0.0
+Who's the head of the owner of ThinThread?,naiverag,llama3.1:8b,nomic-embed-text,map_reduce,500,50,3.329839944839477,0.0969867259263992,0.0,0.0212436709553003
+which Mexican and American film actress is Ethel Houbiers  French voice of ,naiverag,llama3.1:8b,mxbai-embed-large,stuff,500,50,6.967357397079468,0.2769373655319214,0.3905600905418396,0.3341088593006134
