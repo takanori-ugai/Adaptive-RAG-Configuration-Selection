@@ -1,0 +1,69 @@
+\documentclass[a4paper,twoside]{article}
+
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{calc}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{multicol}
+\usepackage{pslatex}
+\usepackage{apalike}
+\usepackage{algorithm2e}
+\usepackage[bottom]{footmisc}
+\usepackage{pifont}
+\usepackage{array} 
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+%\usepackage{remreset}
+\usepackage{booktabs}
+\usepackage{diagbox}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}m{#1}}
+\usepackage{doi}
+\usepackage{multirow}
+\usepackage{siunitx}
+%\usepackage{pdfpages}
+\usepackage{threeparttable}
+\usepackage{arydshln}
+\usepackage{xurl}
+\usepackage{SCITEPRESS}     % Please add other packages that you may need BEFORE the SCITEPRESS.sty package.
+
+\begin{document}
+
+\title{Adaptive RAG Configuration Selection Based on Question and Document Features Considering Cost and Accuracy}
+
+\author{anonymous for review}
+%\author{\authorname{Fumikatsu Anaguchi\sup{1,2}, Sudesna Chakraborty\sup{1}, Takeshi Morita\sup{1,2}, Aoi Ohta\sup{2}, Masaki Asada\sup{2}, Shusaku Egami\sup{2}, Takanori Ugai\sup{3,2} and Masahiro Hamasaki\sup{2}}
+%\affiliation{\sup{1}Aoyama Gakuin University, Japan}
+%\affiliation{\sup{2}National Institute of Advanced Industrial Science and Technology (AIST), Japan}
+%\affiliation{\sup{3}Fujitsu Limited, Japan}
+%\email{morita@it.aoyama.ac.jp}
+%}
+
+\keywords{Retrieval-Augmented Generation, Graph-Based RAG, Adaptive RAG, Learning to Rank, Large Language Model.}
+
+\abstract{Large Language Models (LLMs) face the challenge of generating misinformation or hallucinating about facts absent from their training data. Retrieval-Augmented Generation (RAG) addresses this by incorporating external knowledge sources. However, different queries require different RAG configurations; while complex queries benefit from high-cost strategies (e.g., GraphRAG), simple queries can be resolved using fast, low-cost configurations (e.g., NaiveRAG). Consequently, adaptive RAG systems are essential for balancing quality and computational cost. Existing adaptive RAG approaches often rely on LLMs to route queries, introducing significant runtime overhead, or use online reinforcement learning, which incurs ongoing operational costs. Moreover, unified frameworks optimizing multi-objective trade-offs (e.g., accuracy and latency) across heterogeneous configurations (e.g., chunk size, embedders, generators) are lacking. This study proposes an offline, learning-to-rank approach for adaptive RAG configuration selection. We train a ranking model using multi-faceted query and document features to rank 96 candidate RAG configurations. During inference, candidate configurations are ranked without LLM overhead, and the optimal configuration is selected based on user-defined priority weights for precision, recall, F1-score, and execution time. Evaluation results show that our method outperforms standard baselines, achieving significant Pareto improvements. Specifically, our balanced configuration achieves a 14.15\% point improvement in BERTScore F1-score and an 86.2\% reduction in execution time compared to the state-of-the-art Adaptive-RAG baseline. Furthermore, Wilcoxon signed-rank tests confirm the statistical significance of our approach.}
+
+\onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
+
+\input{ICAART2027/sec1}
+\input{ICAART2027/sec2}
+\input{ICAART2027/sec3}
+\input{ICAART2027/sec4}
+\input{ICAART2027/sec5}
+\input{ICAART2027/sec6}
+
+%\section*{\uppercase{Acknowledgements}}
+%This work was supported in part by New Energy %and Industrial Technology Development %Organization (NEDO) under Grant Numbers %JPNP20006 and JPNP25006, and by JSPS KAKENHI %Grant Numbers 23K11221 and 25K03232.
+
+\bibliographystyle{apalike}
+{\small
+\bibliography{references}}
+
+\end{document}

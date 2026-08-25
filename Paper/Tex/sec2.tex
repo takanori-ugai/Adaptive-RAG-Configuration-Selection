@@ -16,14 +16,14 @@ RAGRouter~\cite{zhang2025ragrouter}は，文書取得後に「そのコンテキ
 AdaGCRAG~\cite{zhang2025adagcrag}は，グラフベースRAGにおいて，知識グラフのエンティティ関係の適応的抽出の範囲や深さを制御することで，軽量なLLM環境での高効率化を図る．
 
 これらの先行・関連研究に対し，提案手法は，RAGの種類（Graph / Non-Graph）からチャンクサイズ、チャンクオーバーラップ、各種モデル（EM, GM）の組合せに及ぶ「全96通りの具体的な構成空間」を一括かつ統一的に順位付けする点で異なる．また，推論時に追加のLLM呼び出しやオンラインでの探索（MCTS等）を必要としないオフライン決定であるため，選択に伴う意思決定オーバーヘッドが極めて低く，かつ動的な重み$W$の変更のみで多様なトレードオフ（適合率・再現率・F1値・実行時間）に対応できるという独自性を持つ．
-表\ref{tab:comparison_of_related_works}に関連研究と提案手法の機能・特徴の比較を示す．
+\ref{tab:comparison_of_related_works}に関連研究と提案手法の機能・特徴の比較を示す．
 
 \begin{table*}[t]
  \caption{関連研究と提案手法の比較}
  \label{tab:comparison_of_related_works}
  \centering
  \footnotesize
- \begin{tabular}{p{2.2cm}p{3cm}p{3cm}p{3cm}p{2cm}p{3.2cm}}
+ \begin{tabular}{p{2cm}p{2.5cm}p{2.5cm}p{2.7cm}p{2cm}p{2.5cm}}
     \toprule
     手法名 & 主な目的 & 最適化対象 & 選択アルゴリズム & 多目的制御 & 主な特徴と制限 \\
     \midrule
