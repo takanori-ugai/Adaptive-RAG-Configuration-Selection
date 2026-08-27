@@ -80,14 +80,14 @@ Next, for each execution trial, we record the query ID, configuration parameters
 \end{table}
 
 \subsection{Ranking Model Training} \label{sec3.3}
-In this section, we describe the training procedure for RMs predicting configuration rankings using the dataset built in Section~\ref{sec3.2}. A key feature of our method is that rather than directly predicting absolute metric values or configurations for a new query, the RM predicts relative rankings among candidate configurations for the same query. This mitigates issues common in regression models—such as score fluctuations caused by query difficulty or measurement noise—enabling robust learning. Furthermore, it avoids class imbalance and rank loss inherent in classification approaches, directly optimizing the model to identify top-performing candidate configurations.
-The feature vector fed into the RM comprises 13 variables: 7 query/document features and 6 configuration parameters. Separate RMs are trained for each objective metric (precision, recall, $F_1$ score, and execution time) because accuracy and cost priorities vary depending on operational requirements. At inference time, predicted rankings from each objective RM are combined using the aggregated scoring function described in Section~\ref{sec3.4}. This modular design avoids reliance on a single objective model and provides user-defined flexibility.
+In this section, we describe the training procedure for RMs predicting configuration rankings using the dataset built in Section~\ref{sec3.2}. Rather than directly predicting absolute metric values, the RM predicts relative rankings among candidate configurations for the same query. This mitigates issues common in regression models—such as score fluctuations caused by query difficulty—enabling robust learning and directly optimizing top-performing candidate configurations.
+The feature vector fed into the RM comprises 13 variables: 7 query/document features and 6 configuration parameters. Separate RMs are trained for each objective metric (precision, recall, $F_1$ score, and execution time). At inference time, predicted rankings from each objective RM are combined using the aggregated scoring function described in Section~\ref{sec3.4}.
 
 \subsection{RAG Configuration Selection and Top-K Formalization} \label{sec3.4}
-Given a new query $q$ and document $d$, the proposed system extracts features and uses the trained RMs to predict the rank of each candidate configuration $c \in \mathcal{C}$ (where $|\mathcal{C}|=96$) across all evaluation metrics.
+Given a new query $q$ and document $d$, the system extracts features and uses trained RMs to predict the rank of each candidate configuration $c \in \mathcal{C}$ ($|\mathcal{C}|=96$) across all evaluation metrics.
 
 \paragraph{Aggregated Scoring Function Background}
-To combine multi-objective rankings, we define a composite evaluation score $S(c; q, d)$ for configuration $c$ using a linear combination of reciprocal ranks across objective metrics:
+To combine multi-objective rankings, we define composite evaluation score $S(c; q, d)$ for configuration $c$ using a linear combination of reciprocal ranks across objective metrics:
 \begin{equation}
 \begin{aligned}
 S(c; q, d) = & \frac{W_{\mathrm{pre}}}{P_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{rec}}}{R_{\mathrm{rank}}(c; q, d)} \\
@@ -104,8 +104,8 @@ Here, $P_{\mathrm{rank}}$, $R_{\mathrm{rank}}$, ${F_1}_{\mathrm{rank}}$, and $T_
 
 The reciprocal rank aggregation scheme offers two primary advantages:
 \begin{enumerate}
-\item \textbf{Scale Unification and Dominance Prevention}: Combining metrics with vastly different physical scales or distributions (e.g., latency in seconds vs. $F_1$ score as a percentage) directly via linear combination risks having high-magnitude metrics (e.g., execution time) dominate the score. Converting ranks to reciprocal values calibrates all metrics into a uniform scale in $(0, 1]$, enabling robust multi-objective optimization.
-\item \textbf{High Sensitivity to Top Ranks}: Reciprocal rank $1/r$ produces a large drop between 1st place ($1.0$) and 2nd place ($0.5$), whereas differences between low ranks (e.g., 90th vs. 91st) are negligible. This matches the practical objective of identifying top candidate configurations and strongly differentiates top-performing candidates.
+\item \textbf{Scale Unification and Dominance Prevention}: Combining metrics with vastly different physical scales (e.g., latency in seconds vs. $F_1$ score as a percentage) directly risks having high-magnitude metrics dominate. Converting ranks to reciprocal values calibrates all metrics into $(0, 1]$, enabling robust multi-objective optimization.
+\item \textbf{High Sensitivity to Top Ranks}: Reciprocal rank $1/r$ produces a large drop between 1st place ($1.0$) and 2nd place ($0.5$), whereas differences between low ranks are negligible, strongly differentiating top-performing candidates.
 \end{enumerate}
 
 \paragraph{Top-$K$ Presentation Model Formalization}

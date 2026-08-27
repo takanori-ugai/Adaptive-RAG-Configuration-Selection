@@ -23,13 +23,13 @@ We describe implementation details and weight settings. For evaluation items (ii
 5. Time-oriented: $W_{\mathrm{time}} = 1.0$.
 
 \subsection{Baseline Methods} \label{sec4.5}
-We establish several baseline methods for comparison.
-For evaluation item (i), a randomly generated ranking serves as the baseline, with reported metrics averaged over 10 random seeds.
+We establish several baseline methods for comparison:
+For evaluation item (i), a randomly generated ranking serves as the baseline, with metrics averaged over 10 random seeds.
 For evaluation item (ii), we define five baseline settings:
-First, ``Default Setting'' represents a standard initial setup often chosen by developers using LangChain defaults, fixing ``NaiveRAG, stuff, 250, 50, llama3.1:8b, nomic-embed-text'' for all queries to serve as a local baseline.
-Second, ``Most Frequent Setting'' uses the single configuration that appeared most frequently under $F_1$ and latency evaluation in the proposed method, specifically fixing ``NaiveRAG, stuff, 500, 50, llama3.1:8b, nomic-embed-text''.
-Third, ``Random Selection'' selects a configuration uniformly at random from the entire 96-configuration candidate space. This represents the expected performance when a configuration is assigned uniformly at random to each question, computed as the overall average across all 7,680 trials (80 test questions $\times$ 96 candidate configurations).
-Fourth, ``Adaptive-RAG''~\cite{Jeong24} is a representative adaptive RAG baseline that routes queries among macro retrieval strategies (No-Retrieval / Single-Step / Multi-Step) based on query complexity classification. In our experiment, we use a 3-class query classifier trained according to the official implementation, assigning representative configurations (No-Retrieval: minimum execution time configuration, Single-Step: Default Setting, Multi-Step: GraphRAG configuration) based on predicted classes.
+First, ``Default Setting'' represents a standard setup using LangChain defaults, fixing ``NaiveRAG, stuff, 250, 50, llama3.1:8b, nomic-embed-text'' for all queries.
+Second, ``Most Frequent Setting'' uses the configuration appearing most frequently under empirical $F_1$ and latency evaluation (``NaiveRAG, stuff, 500, 50, llama3.1:8b, nomic-embed-text'').
+Third, ``Random Selection'' selects a configuration uniformly at random from the 96-configuration space (averaged across all 7,680 trials: 80 test questions $\times$ 96 configurations).
+Fourth, ``Adaptive-RAG''~\cite{Jeong24} is an adaptive baseline routing queries among No-Retrieval, Single-Step (Default Setting), and Multi-Step (GraphRAG) via a 3-class classifier.
 Finally, ``Oracle'' selects the ex-post optimal configuration from candidate set $\mathcal{C}$ for each query, establishing theoretical upper bound performance.
 
 \subsection{Evaluation Metrics} \label{sec4.6}
