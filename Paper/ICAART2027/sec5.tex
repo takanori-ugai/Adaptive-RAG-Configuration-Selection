@@ -123,6 +123,9 @@ Adaptive-RAG achieved only 16.25\% EM and 31.09\% Token-level $F_1$, confirming 
     }
 \end{table}
 
+To assess statistical significance, we conducted Wilcoxon signed-rank tests on paired BERTScore $F_1$ differences between Proposed@1 settings and Adaptive-RAG across 80 test queries.
+The test results confirmed that accuracy ($F_1$ score) improvements of the proposed method were statistically highly significant across all settings ($F_1$-Time: $p=0.000352$, $F_1$-oriented: $p=0.000349$, Recall-oriented: $p=0.000242$, Time-oriented: $p=0.000348$).
+
 \subsection{RAG Performance Evaluation Incorporating User Selection} \label{sec5.3}
 Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results_max} presents the performance evaluation results incorporating user selection among top-$K$ candidates.
 First, for Proposed@3 under Recall-oriented policy, precision reached 44.70\%, recall 59.37\%, $F_1$ score 48.68\%, with single execution time of 9.88s. Under $F_1$-oriented policy, precision reached 44.46\%, recall 59.58\%, $F_1$ score 47.68\%, with single execution time of 7.78s.
@@ -176,8 +179,6 @@ Third, presenting top candidate sets to users rather than a single fixed configu
 Cost-focused settings reach near-oracle performance. These findings indicate that presenting promising candidate sets for post-hoc user selection is a practical design for real-world adaptive RAG deployments, compensating for prediction uncertainties as $K$ increases.
 
 Fourth, the proposed method achieves statistically significant superiority and Pareto improvement over existing Adaptive-RAG.
-We conducted Wilcoxon signed-rank tests on paired BERTScore $F_1$ differences between Proposed@1 settings and Adaptive-RAG across 80 test queries.
-The test results confirmed that accuracy ($F_1$ score) improvements of the proposed method were statistically highly significant across all settings ($F_1$-Time: $p=0.000352$, $F_1$-oriented: $p=0.000349$, Recall-oriented: $p=0.000242$, Time-oriented: $p=0.000348$).
 Adaptive-RAG routes queries using a 3-class query difficulty classifier, assigning GraphRAG to multi-step queries; however, GraphRAG suffered from low performance in this domain (GraphRAG overall mean $F_1$ 5.32\%, mean latency 66.65s; for multi-step queries, mean precision 4.19\%, F1 11.28\%, latency 27.91s).
 Furthermore, keyword-based query classification caused frequent misrouting due to vocabulary ambiguity.
 In contrast, our proposed method unifies 96 candidate configurations spanning query/document features and micro-hyperparameters (chunk size, overlap, models), enabling precise selection of optimal NaiveRAG configurations (e.g., CS=500) even for multi-step queries. This overcomes coarse-grained routing limitations and achieves Pareto dominance under identical cost requirements.
@@ -226,10 +227,11 @@ These results confirm that Reciprocal Rank Sum (Eq.~\eqref{eq1}) without extra s
 \subsection{Ablation Analysis} \label{sec5.5}
 As a feature ablation analysis, we evaluated performance when inputting subsets of RAG Configuration (C), Query Surface Features (Q), Document Surface Features (D), and Semantic Features (S) individually or in combination.
 Models were trained using LightGBM predicting $F_1$ score ranking, evaluated with NDCG@1, NDCG@5, Hit@1, and Hit@5.
+In the following comparison, we focus on NDCG@1, which measures the quality of the top-ranked configuration for single-selection deployment, and Hit@5, which measures whether the oracle configuration is included among the five candidates presented for subsequent user selection. These metrics correspond to the two operational settings studied in this paper: Proposed@1 and Proposed@5.
 
 Table~\ref{tab:feature_ablation_ndcg_hit} presents the ablation analysis results (bold indicates highest, underline indicates second highest).
 First, among single-aspect feature sets, RAG Configuration (C) alone achieved the strongest performance, recording NDCG@1 of 66.84\%, Hit@1 of 56.25\%, Hit@5 of 62.50\%, and the highest NDCG@5 (68.33\%).
-In contrast, non-configuration features (Q, D, S, or Q+D+S) achieved NDCG@1 of only 21.90\%--26.42\%, demonstrating that macro configuration properties serve as the dominant structural baseline in ranking prediction.
+In contrast, Q, D, and S alone achieved NDCG@1 of only 21.90\%--26.42\% and Hit@5 of 23.75\%--27.50\%, while their combination (Q+D+S) achieved NDCG@1 of only 23.27\%. These results demonstrate that macro configuration properties serve as the dominant structural baseline in ranking prediction.
 
 Next, adding partial feature subsets to C (C+Q, C+D, C+S, etc.) resulted in lower NDCG@1 (60.66\%--64.94\%) than C alone (66.84\%), as isolated difficulty cues without complete context induce decision tree overfitting.
 
