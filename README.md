@@ -1,101 +1,86 @@
-# コストと精度を考慮した質問と文書に基づく適応的RAG選択
+# Adaptive RAG Selection Based on Questions and Documents Considering Cost and Accuracy
 
-## 概要
+## Overview
 
-質問と文書から特徴量を抽出し，ランキングモデルで候補となる RAG 構成を順位付けしたうえで，評価指標の重みに基づいて適合的なRAG 構成を選択するためのコードです．
-`pipeline` に「複数モジュールをまとめて実行するスクリプト」を集約します．
+This repository contains code for extracting features from questions and documents, ranking candidate RAG configurations with a ranking model, and selecting an appropriate RAG configuration based on the weights of the evaluation metrics.
+The `pipeline` directories contain scripts that run multiple modules together.
 
-## 概要図
+## Overview Figures
 
 <div align="center">
-  <img src="images/train.png" alt="ランキングモデルの学習">
-  <p>図1: ランキングモデルの学習</p>
+  <img src="images/train.png" alt="Training the ranking model">
+  <p>Figure 1: Training the ranking model</p>
 </div>
 
 <div align="center">
-  <img src="images/inference.png" alt="ランキングモデルによる推論">
-  <p>図2: ランキングモデルによる推論</p>
+  <img src="images/inference.png" alt="Inference with the ranking model">
+  <p>Figure 2: Inference with the ranking model</p>
 </div>
 
-## 実行手順
+## Usage
 
-### 1. 準備
+### 1. Preparation
 
-NaiveRAG，LightRAG，GraphRAGで各RAG構成で実行します．
-各手法の本体コードや詳細，およびデータセットについては，それぞれの公式GitHubリポジトリを参照してください．
-使用したコードは`make_data/`に，実行結果は`data/raw/`に格納します．
+Run each RAG configuration with NaiveRAG, LightRAG, and GraphRAG.
+For the core code, details, and datasets for each method, refer to the corresponding official GitHub repositories.
+Place the code used to generate the data in `make_data/` and the execution results in `data/raw/`.
 
-### 2. 環境構築
+### 2. Environment Setup
 
-Python 3.10.12で実装．
-以下のコマンドで必要なライブラリをインストールします．
+The code was implemented with Python 3.10.12.
+Install the required libraries with the following commands:
 
 ```bash
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 ```
 
-### 3. ランキングモデルの学習
+### 3. Training the Ranking Model
 
-`train/pipeline/make_model.py`が以下をまとめて実行します．
+`train/pipeline/make_model.py` runs the following steps:
 
-- `train/make_train_data.py`: 特徴量抽出と訓練データ構築
-- `train/make_test_data.py`: 特徴量抽出とテストデータ構築
-- `train/make_ranking_model.py`: 特徴量抽出からランキングモデル構築
+- `train/make_train_data.py`: Extracts features and builds the training data
+- `train/make_test_data.py`: Extracts features and builds the test data
+- `train/make_ranking_model.py`: Builds the ranking model from the extracted features
 
 ```bash
 python train/pipeline/make_model.py
 ```
 
-### 4. ランキングモデルによる推論
+### 4. Inference with the Ranking Model
 
-`inference/pipeline/use_model.py`が以下を実行します．
+`inference/pipeline/use_model.py` runs the following steps:
 
-- `inference/use_ranking_model.py`: ランキングモデルを評価
-- `inference/selection_rag.py`: ランキング結果と重みに基づくRAG構成の選択
+- `inference/use_ranking_model.py`: Evaluates the ranking model
+- `inference/selection_rag.py`: Selects a RAG configuration based on the ranking results and metric weights
 
 ```bash
 python inference/pipeline/make_model.py
 ```
 
-## 単発実験
+## One-off Experiment
 
-新たな質問と文書に対して，適応的にRAG構成を選択します．
-`inference/pipeline/pilot_study.py`が以下を実行します．
+Select a RAG configuration adaptively for a new question and document.
+`inference/pipeline/pilot_study.py` runs the following steps:
 
-- `inference/one_feature_extraction.py`: 特徴量抽出
-- `inference/one_selection_rag.py`: RAG構成選択
+- `inference/one_feature_extraction.py`: Extracts features
+- `inference/one_selection_rag.py`: Selects a RAG configuration
 
 ```bash
 python inference/pipeline/pilot_study.py
 ```
 
-## ディレクトリ説明
+## Directory Structure
 
-### `data/`ディレクトリ
+### `data/`
 
-- `data/raw`：各RAGで構築したQAデータ
-- `data/interim`: データセット構築で作成される中間データ
-- `data/train`: ランキングモデルの訓練データ
-- `data/test`: ランキングモデルのテストデータ
+- `data/raw`: QA data generated with each RAG method
+- `data/interim`: Intermediate data created during dataset construction
+- `data/train`: Training data for the ranking model
+- `data/test`: Test data for the ranking model
 
-### `artifacts/`ディレクトリ
+### `artifacts/`
 
-- `artifacts/models`: 学習済みランキングモデル
-- `artifacts/registry`: 学習済みランキングモデルのメタデータ
-- `artifacts/results`: 評価結果
-
-## 引用
-
-本コードを使用される場合は，以下の文献を引用してください．
-
-```bibtex
-@article{anaguchi2026,
-    title = {コストと精度を考慮した質問と文書に基づく適応的RAG選択},
-    author = {穴口 史将 and チャクラボルティ シュデシナ and 森田 武史 and 太田 葵 and 浅田 真生 and 江上 周作 and 鵜飼 孝典 and 濱崎 雅弘},
-    journal = {言語処理学会第32回年次大会},
-    pages = {1--6},
-    volume = {B7-4},
-    year = {2026}
-}
-```
+- `artifacts/models`: Trained ranking models
+- `artifacts/registry`: Metadata for the trained ranking models
+- `artifacts/results`: Evaluation results
