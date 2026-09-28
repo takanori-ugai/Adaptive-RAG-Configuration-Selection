@@ -1,8 +1,8 @@
 \section{\uppercase{Experimental Results and Discussion}} \label{sec5}
 \subsection{Ranking Model Performance Evaluation} \label{sec5.1}
-Table~\ref{Evaluation_of_Ranking_Prediction_Results} presents the performance evaluation results of ranking models (RM).
-For each target variable, bold text indicates the best performance and underlined text indicates the second best. Across all objective variables, LightGBM, XGBoost, and CatBoost outperformed the random baseline, confirming their effectiveness in presenting top candidate configurations.
-In model comparisons, LightGBM achieved or tied for the highest performance in 14 of the 16 target-metric conditions (four target variables evaluated with NDCG@1, NDCG@5, Hit@1, and Hit@5). LightGBM achieved NDCG@1 scores of 67.15–71.46\% for precision, recall, and $F_1$ score predictions, and 99.71\% for execution time prediction. Hit@K consistently improved as K increased, demonstrating stable performance in identifying top candidate configurations. Consequently, LightGBM is selected for evaluation items (ii) and (iii).
+Table~\ref{Evaluation_of_Ranking_Prediction_Results} presents the ranking model (RM) evaluation results.
+For each target variable, boldface indicates the best result and underlining indicates the second-best result. Across all objective variables, LightGBM, XGBoost, and CatBoost outperform the random baseline, demonstrating their ability to identify high-performing candidate configurations.
+LightGBM achieved or tied for the highest result in 14 of the 16 target-metric conditions (four target variables evaluated using NDCG@1, NDCG@5, Hit@1, and Hit@5). Its NDCG@1 scores ranged from 67.15\% to 71.46\% for precision, recall, and $F_1$ predictions; the score for execution-time prediction was 99.71\%. Hit@K increased consistently with K, indicating that the models reliably identify top candidate configurations. We therefore selected LightGBM for evaluation items (ii) and (iii).
 
 \begin{table}[tb]
  \caption{Performance Evaluation Results of Ranking Models.}
@@ -43,23 +43,23 @@ In model comparisons, LightGBM achieved or tied for the highest performance in 1
 \end{table}
 
 \subsection{RAG Performance Evaluation Using Selected Configurations} \label{sec5.2}
-Tables~\ref{Evaluation_of_RAG_Based_on_Selection_Results} and \ref{Evaluation_of_RAG_Based_on_Standard_Metrics} present the RAG performance evaluation results using selected configurations.
-The default setting achieved 38.61\% precision, 51.76\% recall, 40.50\% $F_1$ score, and 5.18s execution time.
-Proposed@1 ($F_1$-Time balanced) improved precision by 2.46\%, recall by 3.26\%, and $F_1$ score by 3.08\% while reducing execution time by 3.75s compared to Default Setting.
-Proposed@1 (Time-oriented) achieved an execution time of 1.41s, a reduction of 3.77s compared to Default Setting.
-Most Frequent Setting achieved 40.94\% precision, 55.02\% recall, 43.55\% $F_1$ score, and 1.41s execution time, equal to Proposed@1 Time-oriented.
-Adaptive-RAG achieved 25.73\% precision, 44.43\% recall, 29.43\% $F_1$ score, and 10.33s latency. All Proposed@1 settings outperformed Adaptive-RAG by 12.12–16.82 percentage points in BERTScore $F_1$ while reducing latency, achieving clear Pareto dominance.
-Random Selection achieved 6.54\% precision, 24.12\% recall, 8.92\% $F_1$ score, and 50.95s latency. Precision is substantially lower (zero in 81.6\% of trials) because heavy graph-based RAG architectures (GraphRAG and LightRAG), which together account for two-thirds (64 of 96) of the configuration space, frequently produce verbose chain-of-thought texts or template refusal responses for simple factoid questions, incurring severe length penalties. This underscores that arbitrary configuration selection leads to severe mismatch and prohibitive latency (>50s), strongly supporting the need for adaptive selection.
+Tables~\ref{Evaluation_of_RAG_Based_on_Selection_Results} and~\ref{Evaluation_of_RAG_Based_on_Standard_Metrics} report RAG performance using the selected configurations.
+The Default Setting achieved 38.61\% precision, 51.76\% recall, 40.50\% $F_1$ score, and an execution time of 5.18 s.
+Compared with the Default Setting, Proposed@1 ($F_1$-Time balanced) improved precision by 2.46 percentage points, recall by 3.26 points, and $F_1$ score by 3.08 points, while reducing execution time by 3.75 s.
+Proposed@1 (Time-oriented) completed execution in 1.41 s, a reduction of 3.77 s compared with the Default Setting.
+The Most Frequent Setting achieved 40.94\% precision, 55.02\% recall, 43.55\% $F_1$ score, and an execution time of 1.41 s, matching Proposed@1 (Time-oriented).
+Adaptive-RAG achieved 25.73\% precision, 44.43\% recall, 29.43\% $F_1$ score, and a latency of 10.33 s. All Proposed@1 settings improved BERTScore $F_1$ by 12.12–16.82 percentage points over Adaptive-RAG while reducing latency, thereby achieving Pareto dominance.
+Random Selection achieved 6.54\% precision, 24.12\% recall, 8.92\% $F_1$ score, and a latency of 50.95 s. Precision was zero in 81.6\% of trials. This low precision may reflect the output characteristics of graph-based RAG systems (GraphRAG and LightRAG), which together account for 64 of the 96 configurations. These systems can produce verbose chain-of-thought text or template-based refusal responses to simple factoid questions, incurring substantial length penalties. The results show that arbitrary configuration selection can lead to poor query-configuration matches and high latency (>50 s), underscoring the need for adaptive selection.
 
-Furthermore, under Proposed@1, the Precision-oriented setting ($W_{\mathrm{pre}}=1.0$) achieved lower empirical precision (39.16\%) compared to Recall-oriented (43.85\%) and $F_1$-oriented (42.12\%) settings.
-Precision is extremely sensitive to extraneous tokens, and target labels for precision alone are sparse and noisy (81.6\% zero values across the dataset).
-Consequently, the Precision-only RM tended to select larger chunk sizes (CS=500 in 52 of 80 cases) to avoid missing relevant context, leading LLMs to generate more verbose responses and inadvertently degrading precision.
-This phenomenon highlights the vulnerability of relying solely on a single isolated objective term, demonstrating why the multi-objective formulation in Eq.~\eqref{eq1} and Eq.~\eqref{eq2}—harmonizing precision and recall via $F_1$ score alongside latency—is indispensable as an effective regularizer. As demonstrated in the weight sweep analysis (Section~\ref{sec5.4.1}), composite settings combining $F_1$ and latency achieve robust and high-accuracy optimization.
+Under Proposed@1, the Precision-oriented setting ($W_{\mathrm{pre}}=1.0$) achieved lower empirical precision (39.16\%) than the Recall-oriented (43.85\%) and $F_1$-oriented (42.12\%) settings.
+Precision is highly sensitive to extraneous tokens, and precision labels alone are sparse and noisy (81.6\% of the values across the dataset are zero).
+Consequently, the Precision-only RM tended to select larger chunk sizes (CS=500 in 52 of 80 cases) to avoid missing relevant context. This choice led LLMs to generate more verbose responses, which could further reduce precision.
+This result highlights the limitations of relying on a single objective. The multi-objective formulation in Eqs.~\eqref{eq1} and~\eqref{eq2}, which combines precision and recall through $F_1$ score alongside latency, can serve as an effective regularizer. The weight-sweep analysis in Section~\ref{sec5.4.1} shows that composite settings combining $F_1$ and latency support robust, high-accuracy optimization.
 
-Evaluation using standard QA metrics (EM and Token-level $F_1$ score) in Table~\ref{Evaluation_of_RAG_Based_on_Standard_Metrics} further confirms the superiority of the proposed method.
+Evaluation using standard QA metrics (EM and token-level $F_1$ score) in Table~\ref{Evaluation_of_RAG_Based_on_Standard_Metrics} provides further evidence of the proposed method's performance.
 Default Setting achieved 27.50\% EM and 37.37\% Token-level $F_1$; Most Frequent Setting achieved 27.50\% EM and 39.25\% Token-level $F_1$.
-In contrast, Proposed@1 ($F_1$-oriented) achieved 30.00\% EM and 45.51\% Token-level $F_1$, while Recall-oriented achieved the highest performance at 32.50\% EM and 46.01\% Token-level $F_1$.
-Adaptive-RAG achieved only 16.25\% EM and 31.09\% Token-level $F_1$, confirming that the proposed method yields substantial improvements of 12.5–16.3 percentage points in EM and ~10–15 percentage points in Token-level $F_1$.
+Proposed@1 ($F_1$-oriented) achieved 30.00\% EM and 45.51\% token-level $F_1$, while the Recall-oriented setting achieved the highest values: 32.50\% EM and 46.01\% token-level $F_1$.
+Adaptive-RAG achieved 16.25\% EM and 31.09\% token-level $F_1$. Across Proposed@1 settings, the improvements were 12.5–16.3 percentage points in EM and approximately 10–15 points in token-level $F_1$.
 
 \begin{table}[tb]
  \caption{RAG Performance Evaluation Results Using Selected Configurations.}
@@ -127,19 +127,19 @@ To assess statistical significance, we conducted Wilcoxon signed-rank tests on p
 For the four Proposed@1 settings with reported test results, the Wilcoxon signed-rank tests found statistically significant improvements in BERTScore $F_1$ over Adaptive-RAG: $F_1$-Time ($p=0.000352$), Recall-oriented ($p=0.000242$), $F_1$-oriented ($p=0.000349$), and Time-oriented ($p=0.000348$).
 
 \subsection{RAG Performance Evaluation Incorporating User Selection} \label{sec5.3}
-Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results_max} presents the performance evaluation results incorporating user selection among top-$K$ candidates.
-First, for Proposed@3 under the Recall-oriented policy, precision reached 44.70\%, recall 59.37\%, $F_1$ score 48.68\%, with a single execution time of 9.88s. Under $F_1$-oriented policy, precision reached 44.46\%, recall 59.58\%, $F_1$ score 47.68\%, with single execution time of 7.78s.
-Under the Time-oriented policy, precision reached 41.17\%, recall 55.18\%, $F_1$ score 43.75\%, and single execution time 1.27s.
-Evaluating cumulative execution time across all 3 candidates executed by the user, the total operational latency for Proposed@3 equals 24.62s.
-Next, for Proposed@5 under Recall-oriented policy, recall reached 60.93\%, $F_1$ score 50.53\%, single latency 7.13s; under $F_1$-oriented policy, recall reached 62.19\%, $F_1$ score 50.25\%, single latency 7.76s. Total cumulative latency for Proposed@5 equals 44.93s.
+Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results_max} reports performance when users select from the top-$K$ candidates.
+For Proposed@3 under the Recall-oriented policy, precision was 44.70\%, recall was 59.37\%, and the $F_1$ score was 48.68\%; the selected configuration took 9.88 s to execute. Under the $F_1$-oriented policy, precision was 44.46\%, recall was 59.58\%, and the $F_1$ score was 47.68\%; execution took 7.78 s.
+Under the Time-oriented policy, precision was 41.17\%, recall was 55.18\%, and the $F_1$ score was 43.75\%, with an execution time of 1.27 s.
+The cumulative execution time for all three candidates in Proposed@3 was 24.62 s.
+For Proposed@5 under the Recall-oriented policy, recall was 60.93\% and the $F_1$ score was 50.53\%, with an execution time of 7.13 s. Under the $F_1$-oriented policy, recall was 62.19\% and the $F_1$ score was 50.25\%, with an execution time of 7.76 s. The cumulative execution time for Proposed@5 was 44.93 s.
 
-Comparing with Oracle in Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results}, single execution times for Proposed@3 and Proposed@5 under the Time-oriented policy matched Oracle Best Time (1.27s) exactly.
-For Proposed@5 Time-oriented, precision, recall, and $F_1$ score also matched Oracle Best Time.
-However, gaps remain between Oracle Best Precision, Best Recall, and Best $F_1$ configurations and the proposed method.
-For Proposed@5 ($F_1$-oriented), precision reached 45.40\%, recall 62.19\%, and $F_1$ score 50.25\%, leaving gaps of 8.43\%, 8.19\%, and 9.47\% compared to Oracle Best $F_1$.
+Compared with the Oracle results in Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results}, the execution times for Proposed@3 and Proposed@5 under the Time-oriented policy exactly matched Oracle Best Time (1.27 s).
+Under Proposed@5 (Time-oriented), precision, recall, and $F_1$ score also matched the Oracle Best Time results.
+However, gaps remain between the proposed method and the Oracle configurations with the best precision, recall, and $F_1$ scores.
+For Proposed@5 ($F_1$-oriented), precision was 45.40\%, recall was 62.19\%, and the $F_1$ score was 50.25\%, corresponding to gaps of 8.43, 8.19, and 9.47 percentage points, respectively, relative to Oracle Best $F_1$.
 
-Note that under Proposed@3, the recall of the $F_1$-oriented policy (59.58\%) slightly exceeded that of the Recall-oriented policy (59.37\%)—a trend also observed in Proposed@5. This occurs because: (1) in evaluation item (iii), candidate pools of top-$K$ configurations are retrieved via RM predictions using different policy weights, and slight prediction variance leads to different sets of candidate configurations; and (2) the $F_1$-oriented RM prioritizes configurations producing rich context (e.g., larger chunk sizes) to maximize harmonic balance, which in complex multi-hop queries incidentally boosted reference token coverage (recall). Nonetheless, both policies achieve substantially higher recall than the Precision-oriented (56.67\%) and Time-oriented (55.18\%) policies, demonstrating that overall trade-off control functions as intended.
-Thus, top-$K$ candidate presentation incurs cumulative trial latency (24.62s for @3, 44.93s for @5) to execute all candidates, but achieves significantly higher $F_1$ scores and minimal execution times beyond single selection (Proposed@1), supporting flexible trade-off control.
+Under Proposed@3, recall for the $F_1$-oriented policy (59.58\%) slightly exceeded recall for the Recall-oriented policy (59.37\%); the same pattern occurred under Proposed@5. Two factors may explain this result. First, the top-$K$ candidate sets are generated from RM predictions using different policy weights, so prediction variation can produce different candidate sets. Second, the $F_1$-oriented RM may prioritize configurations that provide richer context (e.g., larger chunk sizes) to optimize the harmonic mean, which can incidentally increase reference-token coverage (recall) for complex multi-hop queries. Nevertheless, both policies achieved substantially higher recall than the Precision-oriented (56.67\%) and Time-oriented (55.18\%) policies, indicating that the system supports the intended trade-offs.
+Presenting top-$K$ candidates requires cumulative execution times of 24.62 s for Proposed@3 and 44.93 s for Proposed@5. This additional execution enables users to select configurations with higher $F_1$ scores while retaining access to low-latency options, supporting flexible trade-off control.
 
 \begin{table}[tb]
  \caption{RAG Performance Evaluation Results Incorporating User Selection.}
@@ -169,27 +169,27 @@ Thus, top-$K$ candidate presentation incurs cumulative trial latency (24.62s for
 
 
 \subsection{Discussion} \label{sec5.4}
-Four key insights summarize the efficacy of the proposed method.
+Four key findings summarize the proposed method's performance.
 First, RM training effectively concentrates high-performing candidate configurations into top ranks.
 Second, weighted score aggregation enables effective trade-off control tailored to operational goals.
 Our method formulates composite scores using reciprocal ranks as shown in Eq.~\eqref{eq1}.
-While direct score combination risked letting high-magnitude metrics dominate, Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results} shows that trade-off control functions properly according to designated weights without depending solely on a single metric.
+Although directly combining raw scores could allow high-magnitude metrics to dominate, Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results} shows that the proposed method controls trade-offs according to the specified weights rather than relying on a single metric.
 Therefore, reciprocal rank summation provides an effective formulation for selecting RAG configurations.
 Third, presenting top candidate sets to users rather than a single fixed configuration improves deployment robustness in practice.
-Cost-focused settings reach near-oracle performance. These findings indicate that presenting promising candidate sets for post-hoc user selection is a practical design for real-world adaptive RAG deployments, compensating for prediction uncertainties as $K$ increases.
+Cost-focused settings approach Oracle performance. These findings suggest that presenting candidate sets for post-hoc user selection is a practical design for adaptive RAG deployments, as it can compensate for prediction uncertainty when $K$ increases.
 
-Fourth, the proposed method achieves statistically significant superiority and Pareto improvement over existing Adaptive-RAG.
-Adaptive-RAG routes queries using a 3-class query difficulty classifier, assigning GraphRAG to multi-step queries; however, GraphRAG suffered from low performance in this domain (GraphRAG overall mean $F_1$ 5.32\%, mean latency 66.65s; for multi-step queries, mean precision 4.19\%, F1 11.28\%, latency 27.91s).
-Furthermore, keyword-based query classification frequently misroutes queries due to vocabulary ambiguity.
-In contrast, our proposed method unifies 96 candidate configurations spanning query/document features and micro-hyperparameters (chunk size, overlap, models), enabling precise selection of optimal NaiveRAG configurations (e.g., CS=500) even for multi-step queries. This overcomes coarse-grained routing limitations and achieves Pareto dominance under identical cost requirements.
+Fourth, the proposed method achieved statistically significant improvements and Pareto gains over Adaptive-RAG.
+Adaptive-RAG routes queries using a three-class query-difficulty classifier, assigning GraphRAG to multi-step queries. However, GraphRAG performed poorly on this dataset (overall mean $F_1$ score: 5.32\%; mean latency: 66.65 s; for multi-step queries, mean precision: 4.19\%, mean $F_1$ score: 11.28\%, and mean latency: 27.91 s).
+In addition, keyword-based query classification can misroute queries when vocabulary is ambiguous.
+By contrast, our method ranks 96 candidate configurations using query and document features and fine-grained hyperparameters (chunk size, overlap, and models). This enables it to select suitable NaiveRAG configurations (e.g., CS=500) even for multi-step queries. The approach addresses limitations of coarse-grained routing and achieves Pareto dominance under the same cost requirements.
 
-\subsection{Evaluation of Aggregation Scheme and Weight Control Validity} \label{sec5.4.1}
-To evaluate the validity of the reciprocal rank aggregated scoring function in Eq.~\eqref{eq1}, we conducted an ablation study comparing three aggregation functions:
-(1) \textbf{Reciprocal Rank Sum (Proposed)}: Linear combination of reciprocal ranks across objective metrics.
-(2) \textbf{Log-Rank Sum}: Linear combination of ranks discounted by $\log_2(r+1)$.
-(3) \textbf{Linear Predicted Score Sum}: Linear combination of raw predicted scores min-max normalized to $[0, 1]$ per query.
+\subsection{Evaluation of the Aggregation Scheme and Weight Control} \label{sec5.4.1}
+To assess the reciprocal-rank scoring function in Eq.~\eqref{eq1}, we conducted an ablation study comparing three aggregation functions:
+(1) \textbf{Reciprocal Rank Sum (proposed)}: a linear combination of reciprocal ranks across objective metrics.
+(2) \textbf{Log-Rank Sum}: a linear combination of ranks discounted by $\log_2(r+1)$.
+(3) \textbf{Linear Predicted Score Sum}: a linear combination of raw predicted scores, min-max normalized to $[0, 1]$ for each query.
 
-Table~\ref{tab:weight_sweep_ablation} shows $F_1$ score and execution time trends when sweeping $W_{\mathrm{time}}$ from $0.0$ to $1.0$ ($W_{\mathrm{f_1}} = 1.0 - W_{\mathrm{time}}$).
+Table~\ref{tab:weight_sweep_ablation} shows how the $F_1$ score and execution time change as $W_{\mathrm{time}}$ varies from $0.0$ to $1.0$ ($W_{\mathrm{f_1}} = 1.0 - W_{\mathrm{time}}$).
 
 \begin{table}[tb]
  \caption{Results of Aggregation Scheme Ablation and Weight Sweep Analysis.}
@@ -219,24 +219,24 @@ Table~\ref{tab:weight_sweep_ablation} shows $F_1$ score and execution time trend
     }
 \end{table}
 
-As shown in Table~\ref{tab:weight_sweep_ablation}, across all aggregation functions, increasing $W_{\mathrm{time}}$ significantly reduces execution time while gradually adjusting the $F_1$ score, confirming that the trade-off is controlled properly.
-Both (1) Reciprocal Rank Sum and (2) Log-Rank Sum exhibit clear step-wise trade-offs: maintaining high $F_1$ (45.08\%) when $W_{\mathrm{time}} \le 0.3$ and switching to near-fastest latency ($\le 1.43$s) when $W_{\mathrm{time}} \ge 0.5$.
-In contrast, (3) Linear Predicted Score Sum drops execution latency sharply from 7.24s to 1.52s when $W_{\mathrm{time}}$ shifts from $0.0$ to $0.2$, making smooth trade-off control difficult and requiring per-query min-max scaling.
-These results confirm that Reciprocal Rank Sum (Eq.~\eqref{eq1}) without extra scaling is the most effective design for balancing top-candidate identification, trade-off flexibility, and operational simplicity.
+As shown in Table~\ref{tab:weight_sweep_ablation}, increasing $W_{\mathrm{time}}$ reduces execution time across all three aggregation functions while adjusting the $F_1$ score, demonstrating control over the trade-off.
+The Reciprocal Rank Sum and Log-Rank Sum show clear stepwise trade-offs: they maintain a high $F_1$ score (45.08\%) when $W_{\mathrm{time}} \le 0.3$ and switch to near-minimum latency ($\le 1.43$ s) when $W_{\mathrm{time}} \ge 0.5$.
+By contrast, the Linear Predicted Score Sum sharply reduces latency from 7.24 s to 1.52 s as $W_{\mathrm{time}}$ increases from 0.0 to 0.2, making smooth trade-off control difficult and requiring per-query min-max scaling.
+These results support Reciprocal Rank Sum (Eq.~\eqref{eq1}) as an effective design for balancing top-candidate identification, trade-off flexibility, and operational simplicity without additional scaling.
 
 \subsection{Ablation Analysis} \label{sec5.5}
-As a feature ablation analysis, we evaluated performance when inputting subsets of RAG Configuration (C), Query Surface Features (Q), Document Surface Features (D), and Semantic Features (S) individually or in combination.
-We trained models with LightGBM to predict $F_1$ score ranking and evaluated them with NDCG@1, NDCG@5, Hit@1, and Hit@5.
-In the following comparison, we focus on NDCG@1, which measures the quality of the top-ranked configuration for single-selection deployment, and Hit@5, which measures whether the oracle configuration is included among the five candidates presented for subsequent user selection. These metrics correspond to the two operational settings studied in this paper: Proposed@1 and Proposed@5.
+For the feature ablation study, we evaluated performance using subsets of RAG Configuration (C), Query Surface Features (Q), Document Surface Features (D), and Semantic Features (S), individually and in combination.
+We trained LightGBM models to predict $F_1$ rankings and evaluated them using NDCG@1, NDCG@5, Hit@1, and Hit@5.
+The following comparison focuses on NDCG@1, which measures the quality of the top-ranked configuration for single-selection deployment, and Hit@5, which indicates whether the oracle configuration appears among the five candidates presented for subsequent user selection. These metrics correspond to the two operational settings studied in this paper: Proposed@1 and Proposed@5.
 
-Table~\ref{tab:feature_ablation_ndcg_hit} presents the ablation analysis results (bold indicates highest, underline indicates second highest).
-First, among single-aspect feature sets, RAG Configuration (C) alone achieved the strongest performance, recording NDCG@1 of 66.84\%, Hit@1 of 56.25\%, Hit@5 of 62.50\%, and the highest NDCG@5 (68.33\%).
-In contrast, Q, D, and S alone achieved NDCG@1 of only 21.90\%--26.42\% and Hit@5 of 23.75\%--27.50\%, while their combination (Q+D+S) achieved NDCG@1 of only 23.27\%. These results demonstrate that macro configuration properties serve as the dominant structural baseline in ranking prediction.
+Table~\ref{tab:feature_ablation_ndcg_hit} presents the ablation results; boldface indicates the highest value and underlining the second-highest value.
+Among individual feature sets, RAG Configuration (C) alone performed best, with an NDCG@1 of 66.84\%, a Hit@1 of 56.25\%, a Hit@5 of 62.50\%, and the highest NDCG@5 (68.33\%).
+By contrast, Q, D, and S alone achieved NDCG@1 values of 21.90\%–26.42\% and Hit@5 values of 23.75\%–27.50\%. Their combination (Q+D+S) achieved an NDCG@1 of 23.27\%. These results indicate that macro-level configuration properties provide the strongest structural baseline for ranking.
 
-Next, adding partial feature subsets to C (C+Q, C+D, C+S, etc.) resulted in lower NDCG@1 (60.66\%--64.94\%) than C alone (66.84\%), as isolated difficulty cues without complete context induce decision tree overfitting.
+Adding partial feature subsets to C (C+Q, C+D, C+S, etc.) resulted in lower NDCG@1 values (60.66\%–64.94\%) than C alone (66.84\%). Isolated difficulty cues without the full feature context may lead to decision-tree overfitting.
 
-In contrast, when all feature categories are comprehensively integrated (C+Q+D+S), the model achieves the highest overall ranking accuracy, reaching NDCG@1 of 68.52\% (+1.68 points over C alone) and Hit@5 of 65.00\% (+2.50 points over C alone).
-This reveals that macro RAG configuration properties establish the primary performance boundaries, while query and document features serve a fine-grained regularizing and refining role in top-1 configuration selection.
+When all feature categories are integrated (C+Q+D+S), the model achieves the highest overall ranking accuracy: an NDCG@1 of 68.52\% (+1.68 percentage points over C alone) and a Hit@5 of 65.00\% (+2.50 percentage points).
+This suggests that macro-level RAG configuration properties establish the primary performance boundaries, while query and document features refine top-ranked configuration selection.
 
 \begin{table}[tb]
  \caption{Ablation Analysis Results for RAG Configuration (C), Query Surface Features (Q), Document Surface Features (D), and Semantic Features (S).}
@@ -274,29 +274,29 @@ This reveals that macro RAG configuration properties establish the primary perfo
 % shows that macro RAG configuration properties set the primary performance boundaries, while query and document features play  
 
 \subsection{Feature Importance Analysis} \label{sec5.6}
-We analyzed feature importance in the LightGBM RM for $F_1$ score ranking to quantify feature contributions and compare RAG configuration parameters against query/document data features.
+We analyzed feature importance in the LightGBM RM for $F_1$ ranking to quantify feature contributions and compare RAG configuration parameters with query and document features.
 
-The Generative Model (GM) contributed the most (~23\%), followed by the Retrieval Setting RS (~20\%) and the RAG paradigm (~8\%). GM and RS are dominant factors in maximizing $F_1$ score ranking. Non-configuration features also contributed significantly: Document Token Count (~13\%), Query-Document Cosine Similarity (~9\%), Query Type (~7\%), and Entity Cosine Similarity (~7\%). Input difficulty signals from document length and query-document similarity strongly influence configuration selection. In contrast, micro-parameters like Chunk Size (~2\%) and Chunk Overlap (~1\%) contributed less.
+The Generator Model (GM) contributed the most (~23\%), followed by the Retrieval Setting (RS; ~20\%) and the RAG paradigm (~8\%). GM and RS were the largest contributors to $F_1$ ranking. Non-configuration features also contributed: Document Token Count (~13\%), Query-Document Cosine Similarity (~9\%), Query Type (~7\%), and Entity Cosine Similarity (~7\%). Document length and query-document similarity provide signals about input difficulty and influence configuration selection. By contrast, the fine-grained parameters Chunk Size (~2\%) and Chunk Overlap (~1\%) contributed less.
 
-This analysis validates feature selection, demonstrating that relying solely on RAG configurations is insufficient and that integrating query/document data features substantially enhances ranking prediction.
+This analysis supports the feature selection results: RAG configuration features alone are insufficient, and incorporating query and document features improves ranking prediction.
 
 \subsection{Qualitative Analysis} \label{sec5.7}
-We qualitatively analyze system behavior and error modes using two question-answering examples.
-First, consider a query asking for a film director's graduating university: ``Where did the director of film Nalini By Day, Nancy By Night graduate from?''
-Most Frequent Setting produced ``temple university'', and Proposed@1 similarly output ``temple university'' (incorrect). Proposed@2 through @4 also selected NaiveRAG-based configurations, yielding the same wrong answer. However, Proposed@5 included a different configuration candidate that generated the correct answer (``mount holyoke college''). This shows that expanding top-$K$ candidate sets broadens the search space, making correct answers reachable even when a single fixed setup cannot.
+We analyzed system behavior and error modes using two question-answering examples.
+First, consider a query asking which university a film director attended: ``Where did the director of film Nalini By Day, Nancy By Night graduate from?''
+The Most Frequent Setting and Proposed@1 both returned ``temple university,'' which is incorrect. Proposed@2 through Proposed@4 also selected NaiveRAG-based configurations and returned the same answer. Proposed@5, however, included a candidate configuration that generated the correct answer (``mount holyoke college''). This example shows how a larger top-$K$ candidate set can include a correct answer even when a single configuration does not.
 
-Second, consider a multi-step query comparing director death dates: ``Which film has the director died later, The Life And Loves Of Tschaikovsky or Dokuz Dağın Efesi?''
-Oracle achieved the maximum $F_1$ score with a GraphRAG configuration, whereas $F_1$ RM predicted NaiveRAG. This query requires multi-document temporal reasoning and cross-entity tracking. GraphRAG excels at representing inter-document entity relationships, making it well-suited to such queries. In contrast, NaiveRAG relies on local context matching, which was overestimated due to high word-level query-document similarity. The RM was influenced by cosine similarity and token count features, erroneously prioritizing NaiveRAG over GraphRAG.
+Second, consider a multi-step query comparing directors' dates of death: ``Which film has the director died later, The Life And Loves Of Tschaikovsky or Dokuz Dağın Efesi?''
+Oracle achieved the highest $F_1$ score with a GraphRAG configuration, whereas the $F_1$ RM predicted NaiveRAG. The query requires temporal reasoning across multiple documents and tracking multiple entities. GraphRAG can represent inter-document entity relationships, making it suitable for this type of query. NaiveRAG, by contrast, relies on local context matching. High word-level query-document similarity appears to have led the RM to overestimate NaiveRAG, with cosine similarity and token-count features contributing to its selection over GraphRAG.
 
 \subsection{Limitations} \label{sec5.8}
-While the proposed method achieves low-cost, adaptive RAG configuration selection via RM learning, several limitations remain:
+Although the proposed method enables low-cost, adaptive RAG configuration selection using RMs, several limitations remain.
 
-First, regarding representation capability and the bounded contribution of current document features. Integrating all features over RAG configuration alone yielded an NDCG@1 gain of ~1.7 points. Current document features rely on statistical metrics and global embeddings and do not capture discourse transitions or graph topological connectivity across documents.
+First, the representational capacity of the current document features is limited. Adding all features to RAG configuration features yielded an NDCG@1 gain of approximately 1.7 percentage points. The current document features rely on statistical measures and global embeddings; they do not capture discourse transitions or graph connectivity across documents.
 % Consequently, the RM occasionally misclassifies complex multi-hop queries to NaiveRAG. Integrating higher-order document representations (graph structural features, chunk density) is an important future direction.
 
-Second, regarding the performance gap to the theoretical Oracle. While Proposed@1 achieves statistically significant Pareto improvements over realistic operational baselines (Default Setting, Most Frequent Setting, and Adaptive-RAG), an empirical gap remains relative to the exhaustive post-hoc Oracle (~14 points in $F_1$). Narrowing this gap through uncertainty-aware ranking models and generation temperature optimization remains a subject for future research.
+Second, a performance gap remains relative to the theoretical Oracle. Although Proposed@1 achieved statistically significant Pareto improvements over operational baselines (Default Setting, Most Frequent Setting, and Adaptive-RAG), it remained approximately 14 points below the exhaustive post-hoc Oracle in $F_1$. Narrowing this gap through uncertainty-aware ranking models and generation-temperature optimization is a topic for future research.
 
-Third, relying on automated BERTScore does not directly measure context faithfulness or hallucination, leaving unfaithful generation potentially unpenalized.
+Third, BERTScore does not directly measure context faithfulness or hallucination. As a result, it may not penalize unfaithful generations.
 
 % Fourth, while evaluated on standard QA datasets (SQuAD, HotpotQA, 2WikiMultihopQA, MuSiQue), performance on specialized domain corpora (medical, legal, proprietary enterprise docs) with distribution shifts remains unverified.
 
