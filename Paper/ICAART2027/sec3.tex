@@ -42,7 +42,7 @@ Together, these 3 cosine similarities complementarily capture query-document rel
 \subsection{Dataset Construction} \label{sec3.2}
 In this section, we describe the dataset used for RM training, validation, and evaluation. To enable the RM to learn configuration selection rules, we systematically gather performance distributions across a broad configuration space by executing all candidate RAG configurations on training queries and assigning rank labels for relative comparison.
 
-The candidate configuration space comprises 96 combinations across 6 hyperparameter categories shown in Table~\ref{hyperparameters_in_RAG}. We use 3 RAG paradigms: NaiveRAG~\cite{Lewis20}, LightRAG~\cite{Guo25}, and GraphRAG~\cite{edge25}. Retrieval Setting (RS) is set to Stuff or MapReduce for NaiveRAG, and Local or Global for LightRAG and GraphRAG. Chunking settings: Chunk Size (CS) is set to 250 or 500 and Chunk Overlap (CO) to 50 or 100 for NaiveRAG, while CS is 500 or 1000 and CO is 100 or 250 for LightRAG and GraphRAG. Generative Models (GM) are Llama3.1:8b~\cite{Meta24} and Qwen3:14b~\cite{qwen25}, while Embedding Models (EM) are nomic-embed-text~\cite{nussbaum25} and mxbai-embed-large~\footnote{\url{https://www.mixedbread.com/blog/mxbai-embed-large-v1/}}. This comprehensive parameter set ensures sufficient performance variation for RM training.
+The candidate configuration space comprises 96 combinations across 6 hyperparameter categories shown in Table~\ref{hyperparameters_in_RAG}. We use 3 RAG paradigms: NaiveRAG~\cite{Lewis20}, LightRAG~\cite{Guo25}, and GraphRAG~\cite{edge25}. Retrieval Setting (RS) is set to Stuff or MapReduce for NaiveRAG, and Local or Global for LightRAG and GraphRAG. Chunking settings: Chunk Size (CS) is set to 250 or 500 and Chunk Overlap (CO) to 50 or 100 for NaiveRAG, while CS is 500 or 1000 and CO is 100 or 250 for LightRAG and GraphRAG. Generative Models (GM) are Llama3.1:8b~\cite{Meta24} and Qwen3:14b~\cite{qwen25}, while Embedding Models (EM) are nomic-embed-text~\cite{nussbaum24} and mxbai-embed-large~\footnote{\url{https://www.mixedbread.com/blog/mxbai-embed-large-v1/}}. This comprehensive parameter set ensures sufficient performance variation for RM training.
 
 To build a unified dataset covering 3 heterogeneous RAG paradigms, we standardized configuration parameters as much as possible. We treat the information synthesis strategy (Chain Type) in NaiveRAG as a ``Retrieval Setting'' under the same broad category as LightRAG and GraphRAG retrieval modes. In this paper, we collectively refer to these as ``Retrieval Setting (RS).''
 
@@ -87,17 +87,17 @@ The feature vector fed into the RM comprises 13 variables: 7 query/document feat
 Given a new query $q$ and document $d$, the system extracts features and uses trained RMs to predict the rank of each candidate configuration $c \in \mathcal{C}$ ($|\mathcal{C}|=96$) across all evaluation metrics.
 
 \paragraph{Aggregated Scoring Function Background}
-To combine multi-objective rankings, we define a composite evaluation score $S(c; q, d)$ for configuration $c$ using a linear combination of reciprocal ranks across objective metrics:
+To combine multi-objective rankings, we define a composite evaluation score $S(c; q, d; W)$ for configuration $c$ using a linear combination of reciprocal ranks across objective metrics, where $W=(W_{\mathrm{pre}}, W_{\mathrm{rec}}, W_{\mathrm{f_1}}, W_{\mathrm{time}})$ is the user-specified priority-weight vector:
 \begin{equation}
 \begin{aligned}
-S(c; q, d) = & \frac{W_{\mathrm{pre}}}{P_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{rec}}}{R_{\mathrm{rank}}(c; q, d)} \\
+S(c; q, d; W) = & \frac{W_{\mathrm{pre}}}{P_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{rec}}}{R_{\mathrm{rank}}(c; q, d)} \\
 & + \frac{W_{\mathrm{f_1}}}{{F_1}_{\mathrm{rank}}(c; q, d)} + \frac{W_{\mathrm{time}}}{T_{\mathrm{rank}}(c; q, d)}
 \end{aligned}
 \label{eq1}
 \end{equation}
 where user-specified priority weights $W$ satisfy:
 \begin{equation}
-W_{\mathrm{pre}} + W_{\mathrm{rec}} + W_{\mathrm{f_1}} + W_{\mathrm{time}} = 1
+W_{\mathrm{pre}} + W_{\mathrm{rec}} + W_{\mathrm{f_1}} + W_{\mathrm{time}} = 1, \qquad W_i \geq 0
 \label{eq2}
 \end{equation}
 Here, $P_{\mathrm{rank}}$, $R_{\mathrm{rank}}$, ${F_1}_{\mathrm{rank}}$, and $T_{\mathrm{rank}}$ denote integer ranks from $1$ to $|\mathcal{C}|$ ($=96$) assigned to configuration $c$ based on predicted values for precision, recall, $F_1$ score, and execution latency, respectively.
@@ -109,19 +109,18 @@ The reciprocal rank aggregation scheme offers two primary advantages:
 \end{enumerate}
 
 \paragraph{Top-$K$ Presentation Model Formalization}
-In addition to single-configuration presentation ($K=1$), we formalize a practical operational model ($K > 1$) where the top $K$ candidate configurations $\mathcal{C}_K(q, d) \subset \mathcal{C}$ with highest predicted scores are presented to the user.
+In addition to single-configuration presentation ($K=1$), we formalize a practical operational model ($K > 1$) where the top $K$ candidate configurations $\mathcal{C}_K(q, d; W) \subset \mathcal{C}$ with highest predicted scores under priority weights $W$ are presented to the user.
 
-First, composite scores $S(c; q, d)$ are computed using balanced default weights ($W_{\mathrm{f_1}} = W_{\mathrm{time}} = 0.5$ in Eq.~\eqref{eq1}), and configurations are sorted in descending score order. The subset of top $K$ configurations is defined as $\mathcal{C}_K(q, d)$:
+First, composite scores $S(c; q, d; W)$ are computed using the user-specified priority weights $W$ in Eq.~\eqref{eq1}, and configurations are sorted in descending score order. This formulation supports any policy represented by valid weights, including $F_1$-, precision-, recall-, or time-oriented policies, as well as intermediate trade-offs. The subset of top $K$ configurations under weights $W$ is defined as $\mathcal{C}_K(q, d; W)$:
 \begin{equation}
-\mathcal{C}_K(q, d) = \arg\max^{(K)}_{c \in \mathcal{C}} S_{\mathrm{balanced}}(c; q, d)
+\mathcal{C}_K(q, d; W) = \arg\max^{(K)}_{c \in \mathcal{C}} S(c; q, d; W)
 \label{eq3}
 \end{equation}
 where $\arg\max^{(K)}$ extracts the top $K$ scoring elements.
 
-The user executes all configurations within the candidate set $\mathcal{C}_K(q, d)$ and adopts the best-performing configuration $c^*$ ex post according to their operational policy (e.g., accuracy-oriented, precision-oriented, recall-oriented, or time-oriented). For instance, a user adhering to an $F_1$-oriented policy selects:
+The user executes all configurations within the candidate set $\mathcal{C}_K(q, d; W)$ and adopts the best-performing configuration $c^*$ ex post according to their operational policy. For instance, a user adhering to an $F_1$-oriented policy selects:
 \begin{equation}
-c^* = \arg\max_{c \in \mathcal{C}_K(q, d)} \text{BERTScore}_{F_1}(c)
+c^* = \arg\max_{c \in \mathcal{C}_K(q, d; W)} \text{BERTScore}_{F_1}(c)
 \label{eq4}
 \end{equation}
-Under this model, because all candidate configurations in $\mathcal{C}_K(q, d)$ are executed (in parallel or sequentially), total operational latency equals the cumulative execution time of all $K$ configurations. However, user selection compensates for model prediction uncertainty, enabling performance close to oracle upper bounds.
-
+Under this model, because all candidate configurations in $\mathcal{C}_K(q, d; W)$ are executed (in parallel or sequentially), total operational latency equals the cumulative execution time of all $K$ configurations. However, user selection compensates for model prediction uncertainty, enabling performance close to oracle upper bounds.
