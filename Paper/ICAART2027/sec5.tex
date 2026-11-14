@@ -45,7 +45,7 @@ LightGBM achieved or tied for the highest result in 14 of the 16 target-metric c
 \subsection{RAG Performance Evaluation Using Selected Configurations} \label{sec5.2}
 Tables~\ref{Evaluation_of_RAG_Based_on_Selection_Results} and~\ref{Evaluation_of_RAG_Based_on_Standard_Metrics} report RAG performance using the selected configurations.
 The Default Setting achieved 38.61\% precision, 51.76\% recall, 40.50\% $F_1$ score, and an execution time of 5.18 s.
-Compared with the Default Setting, Proposed@1 ($F_1$-Time balanced) improved precision by 2.46 percentage points, recall by 3.26 points, and $F_1$ score by 3.08 points, while reducing execution time by 3.75 s.
+Compared with the Default Setting, Proposed@1 ($F_1$-Time balanced) improved precision by 2.46 percentage points, recall by 3.26 percentage points, and $F_1$ score by 3.08 percentage points, while reducing execution time by 3.75 s.
 Proposed@1 (Time-oriented) completed execution in 1.41 s, a reduction of 3.77 s compared with the Default Setting.
 The Most Frequent Setting achieved 40.94\% precision, 55.02\% recall, 43.55\% $F_1$ score, and an execution time of 1.41 s, matching Proposed@1 (Time-oriented).
 Adaptive-RAG achieved 25.73\% precision, 44.43\% recall, 29.43\% $F_1$ score, and a latency of 10.33 s. All Proposed@1 settings improved BERTScore $F_1$ by 12.12–16.82 percentage points over Adaptive-RAG while reducing latency, thereby achieving Pareto dominance.
@@ -54,7 +54,7 @@ Random Selection achieved 6.54\% precision, 24.12\% recall, 8.92\% $F_1$ score, 
 Under Proposed@1, the Precision-oriented setting ($W_{\mathrm{pre}}=1.0$) achieved lower empirical precision (39.16\%) than the Recall-oriented (43.85\%) and $F_1$-oriented (42.12\%) settings.
 Precision is highly sensitive to extraneous tokens, and precision labels alone are sparse and noisy (81.6\% of the values across the dataset are zero).
 Consequently, the Precision-only RM tended to select larger chunk sizes (CS=500 in 52 of 80 cases) to avoid missing relevant context. This choice led LLMs to generate more verbose responses, which could further reduce precision.
-This result highlights the limitations of relying on a single objective. The multi-objective formulation in Eqs.~\eqref{eq1} and~\eqref{eq2}, which combines precision and recall through $F_1$ score alongside latency, can serve as an effective regularizer. The weight-sweep analysis in Section~\ref{sec5.4.1} shows that composite settings combining $F_1$ and latency support robust, high-accuracy optimization.
+This result highlights the limitations of relying on a single objective. The multi-objective formulation in Eqs.~\eqref{eq1} and~\eqref{eq2}, which combines precision and recall through the $F_1$ score alongside latency, can serve as an effective regularizer. The weight-sweep analysis in Section~\ref{sec5.4.1} shows that composite settings combining $F_1$ and latency support robust, high-accuracy optimization.
 
 Evaluation using standard QA metrics (EM and token-level $F_1$ score) in Table~\ref{Evaluation_of_RAG_Based_on_Standard_Metrics} provides further evidence of the proposed method's performance.
 Default Setting achieved 27.50\% EM and 37.37\% Token-level $F_1$; Most Frequent Setting achieved 27.50\% EM and 39.25\% Token-level $F_1$.
@@ -131,14 +131,14 @@ Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results_max} reports performance
 For Proposed@3 under the Recall-oriented policy, precision was 44.70\%, recall was 59.37\%, and the $F_1$ score was 48.68\%; the selected configuration took 9.88 s to execute. Under the $F_1$-oriented policy, precision was 44.46\%, recall was 59.58\%, and the $F_1$ score was 47.68\%; execution took 7.78 s.
 Under the Time-oriented policy, precision was 41.17\%, recall was 55.18\%, and the $F_1$ score was 43.75\%, with an execution time of 1.27 s.
 The cumulative execution time for all three candidates in Proposed@3 was 24.62 s.
-For Proposed@5 under the Recall-oriented policy, recall was 60.93\% and the $F_1$ score was 50.53\%, with an execution time of 7.13 s. Under the $F_1$-oriented policy, recall was 62.19\% and the $F_1$ score was 50.25\%, with an execution time of 7.76 s. The cumulative execution time for Proposed@5 was 44.93 s.
+For Proposed@5 under the Recall-oriented policy, recall was 60.93\%, and the $F_1$ score was 50.53\%, with an execution time of 7.13 s. Under the $F_1$-oriented policy, recall was 62.19\%, and the $F_1$ score was 50.25\%, with an execution time of 7.76 s. The cumulative execution time for Proposed@5 was 44.93 s.
 
-Compared with the Oracle results in Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results}, the execution times for Proposed@3 and Proposed@5 under the Time-oriented policy exactly matched Oracle Best Time (1.27 s).
+Compared with the Oracle results in Table~\ref{Evaluation_of_RAG_Based_on_Selection_Results}, the execution times for Proposed@3 and Proposed@5 under the Time-oriented policy exactly matched the Oracle Best Time (1.27 s).
 Under Proposed@5 (Time-oriented), precision, recall, and $F_1$ score also matched the Oracle Best Time results.
 However, gaps remain between the proposed method and the Oracle configurations with the best precision, recall, and $F_1$ scores.
 For Proposed@5 ($F_1$-oriented), precision was 45.40\%, recall was 62.19\%, and the $F_1$ score was 50.25\%, corresponding to gaps of 8.43, 8.19, and 9.47 percentage points, respectively, relative to Oracle Best $F_1$.
 
-Under Proposed@3, recall for the $F_1$-oriented policy (59.58\%) slightly exceeded recall for the Recall-oriented policy (59.37\%); the same pattern occurred under Proposed@5. Two factors may explain this result. First, the top-$K$ candidate sets are generated from RM predictions using different policy weights, so prediction variation can produce different candidate sets. Second, the $F_1$-oriented RM may prioritize configurations that provide richer context (e.g., larger chunk sizes) to optimize the harmonic mean, which can incidentally increase reference-token coverage (recall) for complex multi-hop queries. Nevertheless, both policies achieved substantially higher recall than the Precision-oriented (56.67\%) and Time-oriented (55.18\%) policies, indicating that the system supports the intended trade-offs.
+Under Proposed@3, recall for the $F_1$-oriented policy (59.58\%) slightly exceeded recall for the Recall-oriented policy (59.37\%); the same pattern occurred under Proposed@5. Two factors may explain this result. First, the top-$K$ candidate sets are generated from RM predictions using different policy weights so that prediction variation can produce different candidate sets. Second, the $F_1$-oriented RM may prioritize configurations that provide richer context (e.g., larger chunk sizes) to optimize the harmonic mean, which can incidentally increase reference-token coverage (recall) for complex multi-hop queries. Nevertheless, both policies achieved substantially higher recall than the Precision-oriented (56.67\%) and Time-oriented (55.18\%) policies, indicating that the system supports the intended trade-offs.
 Presenting top-$K$ candidates requires cumulative execution times of 24.62 s for Proposed@3 and 44.93 s for Proposed@5. This additional execution enables users to select configurations with higher $F_1$ scores while retaining access to low-latency options, supporting flexible trade-off control.
 
 \begin{table}[tb]
@@ -229,7 +229,7 @@ For the feature ablation study, we evaluated performance using subsets of RAG Co
 We trained LightGBM models to predict $F_1$ rankings and evaluated them using NDCG@1, NDCG@5, Hit@1, and Hit@5.
 The following comparison focuses on NDCG@1, which measures the quality of the top-ranked configuration for single-selection deployment, and Hit@5, which indicates whether the oracle configuration appears among the five candidates presented for subsequent user selection. These metrics correspond to the two operational settings studied in this paper: Proposed@1 and Proposed@5.
 
-Table~\ref{tab:feature_ablation_ndcg_hit} presents the ablation results; boldface indicates the highest value and underlining the second-highest value.
+Table~\ref{tab:feature_ablation_ndcg_hit} presents the ablation results; boldface indicates the highest value and underlining indicates the second-highest value.
 Among individual feature sets, RAG Configuration (C) alone performed best, with an NDCG@1 of 66.84\%, a Hit@1 of 56.25\%, a Hit@5 of 62.50\%, and the highest NDCG@5 (68.33\%).
 By contrast, Q, D, and S alone achieved NDCG@1 values of 21.90\%–26.42\% and Hit@5 values of 23.75\%–27.50\%. Their combination (Q+D+S) achieved an NDCG@1 of 23.27\%. These results indicate that macro-level configuration properties provide the strongest structural baseline for ranking.
 
