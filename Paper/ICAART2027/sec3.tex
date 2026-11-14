@@ -16,7 +16,7 @@
 In this study, we propose a method that adaptively selects RAG configurations based on query and document features, enabling flexible trade-offs between accuracy (precision, recall, and $F_1$ score) and cost (execution time). Figures~\ref{construction} and~\ref{reasoning} illustrate the training and inference procedures for the ranking models (RMs). The precision, recall, $F_1$, and time RMs use query and document features together with RAG configuration parameters as input features. They predict the relative ranks of candidate configurations for precision, recall, $F_1$ score, and execution latency, respectively. This section describes the training and inference procedures.
 
 \subsection{Feature Extraction} \label{sec3.1}
-We extract surface-level and semantic features from queries and documents. Assuming that one or more query-relevant documents are available, we extract features during both RM training and inference. These features capture query complexity, user intent, and query-document relevance. We selected seven features: four surface-level and three semantic features. This set was chosen heuristically by evaluating feature combinations and selecting the subset that maximized RM ranking accuracy (see Section~\ref{sec5.5} for the ablation analysis).
+We extract surface-level and semantic features from queries and their associated document input. The selector therefore assumes that query-relevant document text is available when configuration selection takes place; it does not itself retrieve or select that text. The document variable $d$ denotes the text supplied to the feature extractor for the query, and document-level features are computed from that input. The experiments do not separately quantify the cost of obtaining or preparing this document input or extracting its features. These features capture query complexity, user intent, and query-document relevance. We selected seven features: four surface-level and three semantic features. This set was chosen heuristically by evaluating feature combinations and selecting the subset that maximized RM ranking accuracy (see Section~\ref{sec5.5} for the ablation analysis).
 
 \subsubsection{Surface-level Feature Extraction}
 The four surface-level features are query token count, query dependency parse-tree depth, query type, and document token count.
@@ -40,7 +40,7 @@ Cosine similarity between named entities extracted from the query and document c
 Together, these three features capture query-document relevance at the full-text, key-point, and entity levels.
 
 \subsection{Dataset Construction} \label{sec3.2}
-This section describes the dataset used to train, validate, and evaluate the RMs. To enable the RMs to learn configuration selection rules, we gathered performance data across a broad configuration space by running every candidate RAG configuration on the training queries and assigning rank labels for comparison.
+This section describes the dataset used to train and evaluate the RMs. To enable the RMs to learn configuration selection rules, we gathered performance data across a broad configuration space by running every candidate RAG configuration on the training queries and assigning rank labels for comparison.
 
 The candidate configuration space contains 96 combinations across the six hyperparameter categories shown in Table~\ref{hyperparameters_in_RAG}. We considered three RAG paradigms: NaiveRAG~\cite{Lewis20}, LightRAG~\cite{Guo25}, and GraphRAG~\cite{edge25}. The retrieval setting (RS) is Stuff or MapReduce for NaiveRAG and Local or Global for LightRAG and GraphRAG. For NaiveRAG, chunk size (CS) is 250 or 500, and chunk overlap (CO) is 50 or 100. For LightRAG and GraphRAG, CS is 500 or 1000, and CO is 100 or 250. The generator models are Llama 3.1 8B~\cite{Meta24} and Qwen3 14B~\cite{qwen25}; the embedding models are nomic-embed-text~\cite{nussbaum24} and mxbai-embed-large~\footnote{\url{https://www.mixedbread.com/blog/mxbai-embed-large-v1/}}. This parameter set provides variation in performance for RM training.
 
@@ -109,7 +109,7 @@ Reciprocal-rank aggregation offers two main advantages:
 \end{enumerate}
 
 \paragraph{Top-$K$ Presentation Model Formalization}
-In addition to single-configuration presentation ($K=1$), we formalize an operational model ($K > 1$) in which we present the $K$ candidate configurations with the highest scores under priority weights $W$, denoted by $\mathcal{C}_K(q, d; W) \subset \mathcal{C}$.
+In addition to single-configuration selection ($K=1$), we define a top-$K$ shortlist ($K > 1$) containing the $K$ candidate configurations with the highest scores under priority weights $W$, denoted by $\mathcal{C}_K(q, d; W) \subset \mathcal{C}$. Its empirical evaluation in this study uses reference answers to identify the best candidate, as described below.
 
 First, composite scores $S(c; q, d; W)$ are computed using the user-specified priority weights $W$ in Eq.~\eqref{eq1}, and configurations are sorted in descending score order. This formulation supports any policy represented by valid weights, including $F_1$-, precision-, recall-, or time-oriented policies, as well as intermediate trade-offs. The subset of top $K$ configurations under weights $W$ is defined as $\mathcal{C}_K(q, d; W)$:
 \begin{equation}
@@ -118,9 +118,9 @@ First, composite scores $S(c; q, d; W)$ are computed using the user-specified pr
 \end{equation}
 where $\arg\max^{(K)}$ extracts the top $K$ scoring elements.
 
-The user executes all configurations in the candidate set $\mathcal{C}_K(q, d; W)$ and then selects the best-performing configuration $c^*$ according to their operational policy. For example, under an $F_1$-oriented policy, the user selects:
+In the oracle-assisted top-$K$ evaluation reported in this paper, all configurations in the candidate set $\mathcal{C}_K(q, d; W)$ are executed, and the candidate with the best measured metric is identified using the reference answer. This is an oracle-assisted shortlist evaluation, not a reference-free user-selection workflow. For example, under an $F_1$-oriented policy, the selected candidate is:
 \begin{equation}
 c^* = \arg\max_{c \in \mathcal{C}_K(q, d; W)} \text{BERTScore}_{F_1}(c)
 \label{eq4}
 \end{equation}
-Because all configurations in $\mathcal{C}_K(q, d; W)$ are executed (in parallel or sequentially), total operational latency equals their cumulative execution time. User selection can compensate for uncertainty in the model's predictions and yield performance close to the Oracle upper bound.
+Because all configurations in $\mathcal{C}_K(q, d; W)$ are executed, this evaluation incurs the sum of their execution times. This cumulative computational time is distinct from wall-clock latency, which would depend on the execution schedule and parallelism. The oracle-assisted results estimate shortlist potential, but do not establish the outcome of reference-free user selection.
