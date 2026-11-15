@@ -1,40 +1,24 @@
 \section{\uppercase{Experimental Methodology}} \label{sec4}
-We evaluate the effectiveness of ranking models (RMs) for adaptive RAG configuration selection on QA tasks across three aspects: (i) RM ranking performance, (ii) RAG performance with selected configurations, and (iii) oracle-assisted evaluation of top-$K$ candidate shortlists. The third aspect uses reference answers to identify the best-performing candidate and therefore does not evaluate reference-free user choice.
+\subsection{Data and Ranker Selection} \label{sec4.1}\label{sec4.2}
+We randomly sample 100 training and 20 evaluation instances from each of SQuAD~\cite{rajpurkar16}, HotpotQA~\cite{yang18}, 2WikiMultihopQA~\cite{ho20}, and MuSiQue~\cite{trivedi22}: 400 training and 80 evaluation instances in total. Each provides a query, associated documents, and a reference answer. LightGBM~\cite{KeGuolin17}, XGBoost~\cite{ChenTianqi16}, and CatBoost~\cite{Prokhorenkova18} are compared as rankers. LightGBM is selected for downstream evaluation using ranking results on these same 80 evaluation questions. No separate validation set is reported; the final-response results are thus not an independent test after model selection.
 
-\subsection{Evaluation Items} \label{sec4.0}
-Evaluation item (i) measures the alignment between predicted rankings and the ground-truth rankings.
-Evaluation item (ii) assesses final response quality by running RAG with configurations selected under five priority-weight settings and comparing the results with baseline methods. We evaluate the top-ranked configuration (Proposed@1) and the average performance of the top five configurations (Proposed@5).
-Evaluation item (iii) measures the potential of a top-$K$ shortlist under oracle assistance. It is a retrospective analysis: each candidate is run, scored against the reference answer, and the best candidate under the target metric is selected. It does not simulate a real user's reference-free selection.
+\subsection{Policies and Comparators} \label{sec4.3}
+We evaluate five policies: Balanced ($W_{\mathrm{f_1}}=W_{\mathrm{time}}=0.5$), Precision, Recall, $F_1$, and Time (each placing weight 1 on its named objective). All other weights are zero. Proposed@1 executes the top-scoring configuration; oracle-assisted shortlists use $K=3$ and $5$.
 
-For each query, the ranking model ranks candidate RAG configurations using the weights for the relevant policy (Section~\ref{sec4.3}). Each of the top-$K$ configurations is run and its output is evaluated against the reference answer. We then select, retrospectively, the candidate with the best observed value of the target metric and report its average performance. For example, under the $F_1$-oriented policy, we select the candidate with the highest empirical $F_1$ score from the top-$K$ set ranked using $W_{\mathrm{f_1}}=1.0$. The other policies use the corresponding measured metric. Because this selection uses reference answers, these results are an oracle-assisted shortlist evaluation rather than a demonstrated user workflow.
+\label{sec4.5}
+The Default Setting fixes NaiveRAG, Stuff, CS=250, CO=50, llama3.1:8b, and nomic-embed-text. The Most Frequent Setting changes CS to 500 and was identified from empirical $F_1$ and latency evaluations. It is a descriptive fixed-setting reference, not an independently specified baseline. Random Selection samples uniformly from the 96 configurations; reported results average 7,680 trials (80 questions $\times$ 96 configurations). Random ranking uses 10 seeds. Our Adaptive-RAG~\cite{Jeong24} implementation routes among No-Retrieval, Single-Step (Default Setting), and Multi-Step (GraphRAG). Its GraphRAG branch is part of the evaluated comparator, so the comparison is specific to this implementation. The Oracle selects the ex-post best configuration per query from all 96 candidates.
 
-\subsection{Evaluation Datasets} \label{sec4.1}
-We use four standard QA datasets: SQuAD~\cite{rajpurkar16}, HotpotQA~\cite{yang18}, 2WikiMultihopQA~\cite{ho20}, and MuSiQue~\cite{trivedi22}. Each dataset provides queries, associated documents, and ground-truth answers. The method assumes that query-associated document text is available to the selector; the experiments do not separately quantify the cost of obtaining or preparing that input. We combine the datasets to evaluate performance across different difficulty levels. From each dataset, we randomly sampled 100 instances for training and 20 for evaluation, yielding 400 training instances and 80 evaluation instances in total.
+\subsection{Metrics and Implementation} \label{sec4.6}\label{sec4.7}
+Ranking is measured using NDCG@K~\cite{JarvelinKalervo02} and Hit@K on discretized relevance gains. For each query and objective, dense rank $r(c)$ is converted using the largest rank $r_{\max}$:
+\begin{equation}
+\ell(c)=\left\lfloor 63\frac{r(c)-1}{r_{\max}-1}+1\right\rfloor,
+\qquad g(c)=65-\ell(c).
+\label{eq:relevance}
+\end{equation}
+If $r_{\max}=1$, all candidates receive $\ell=1$. Hit@K is the fraction of queries for which the top $K$ candidates by predicted score contain at least one candidate with maximum $g$. Both measured ties and discretization can create multiple maximum-gain candidates. With 96 distinct ranks, ranks 1 and 2 both map to $\ell=1$; all 80 time-evaluation queries have two maximum-gain candidates. Thus, Hit@K measures coverage of the best discretized relevance level, rather than exact recovery of the measured optimum. NDCG also uses $g$ as its relevance input.
 
-\subsection{Ranking Models} \label{sec4.2}
-We use LightGBM~\cite{KeGuolin17}, XGBoost~\cite{ChenTianqi16}, and CatBoost~\cite{Prokhorenkova18} as ranking algorithms. LightGBM and XGBoost capture nonlinear interactions among features, whereas CatBoost is designed to handle categorical features. We selected LightGBM for evaluation items (ii) and (iii) based on its ranking performance on evaluation item (i), measured on the 80 evaluation questions. Thus, the reported downstream results use the same evaluation set that informed ranker selection; they are not an independent final test after model selection. No separate validation set is reported in this study.
+ Final QA uses BERTScore precision, recall, and $F_1$, Exact Match (EM), token-level $F_1$, and execution time from query submission to response generation. Paired Wilcoxon signed-rank tests compare Proposed@1 BERTScore $F_1$ with our Adaptive-RAG implementation only, not with fixed settings.
 
-\subsection{Proposed Method Configurations} \label{sec4.3}
-For evaluation items (ii) and (iii), we use five configurations of the proposed method, each with different priority weights in Eq.~\eqref{eq1}:
-1. Balanced ($F_1$-Time): $W_{\mathrm{f_1}} = W_{\mathrm{time}} = 0.5$.
-2. Precision-oriented: $W_{\mathrm{pre}} = 1.0$.
-3. Recall-oriented: $W_{\mathrm{rec}} = 1.0$.
-4. $F_1$-oriented: $W_{\mathrm{f_1}} = 1.0$.
-5. Time-oriented: $W_{\mathrm{time}} = 1.0$.
+The evaluation code defaults to \texttt{microsoft/deberta-base-mnli} for BERTScore, with baseline rescaling enabled and IDF weighting disabled. Rescaled scores are clipped to $[0,1]$ before aggregation. Consequently, a reported zero can represent a negative rescaled similarity that was clipped, rather than complete absence of reference-related content. The saved evaluation data contain 81.59\% zero precision values across the 7,680 query--configuration pairs. The model and rescaling settings are configurable, so the code defaults alone do not establish the runtime settings used to produce every saved result.
 
-\subsection{Baseline Methods} \label{sec4.5}
-We use the following baseline methods:
-For evaluation item (i), we use randomly generated rankings as a baseline and average the metrics across 10 random seeds.
-For evaluation item (ii), we use five baseline settings. ``Default Setting'' uses LangChain's default configuration, fixed to ``NaiveRAG, stuff, 250, 50, llama3.1:8b, nomic-embed-text'' for all queries. ``Most Frequent Setting'' is the configuration that appeared most frequently in the empirical $F_1$ and latency evaluations (``NaiveRAG, stuff, 500, 50, llama3.1:8b, nomic-embed-text''). Since this setting was identified empirically rather than specified a priori, we treat it as a descriptive fixed-setting reference; its comparison is not an independent test of generalization. ``Random Selection'' samples a configuration uniformly from the 96-configuration space; its results are averaged over 7,680 trials (80 evaluation queries $\times$ 96 configurations). ``Adaptive-RAG''~\cite{Jeong24} is our implementation of a three-class routing baseline assigning queries to No-Retrieval, Single-Step (Default Setting), or Multi-Step (GraphRAG). This concrete routing setup, including the assignment of GraphRAG to the Multi-Step branch, is the comparator evaluated here; results should not be interpreted as a general claim about all implementations of Adaptive-RAG. Finally, ``Oracle'' selects the ex-post optimal configuration from candidate set $\mathcal{C}$ for each query, providing a theoretical upper bound on performance.
-
-\subsection{Evaluation Metrics} \label{sec4.6}
-We evaluate RMs using NDCG@K~\cite{JarvelinKalervo02} and Hit@K~\footnote{\url{https://docs.shaped.ai/docs/metrics/hr/}}. NDCG@K measures ranking quality by assigning greater weight to higher-ranked candidates. Hit@K measures the proportion of queries for which the oracle configuration appears among the top $K$ candidates.
-
-To evaluate final RAG response quality, we measure semantic similarity using BERTScore~\cite{zhang20} precision, recall, and $F_1$ score. We also report Exact Match (EM), token-level $F_1$ score, and execution time from query submission to response generation.
-We report paired Wilcoxon signed-rank tests for BERTScore $F_1$ comparisons between the Proposed@1 policies and the Adaptive-RAG implementation. These tests do not establish significant differences against the fixed-setting baselines.
-
-\subsection{Implementation Environment} \label{sec4.7}
-We implemented NaiveRAG using LangChain~\footnote{\url{https://www.langchain.com/}} and the graph-based RAG systems using the public LightRAG and GraphRAG repositories on GitHub~\footnote{\url{https://github.com/HKUDS/LightRAG/}}~\footnote{\url{https://github.com/microsoft/graphrag/}}.
-For feature extraction, we used spaCy~\footnote{\url{https://spacy.io/}} for token counting, dependency parse-tree depth, and named-entity extraction, and YAKE~\footnote{\url{http://yake.inesctec.pt/}} for keyword extraction.
-We ran the experiments on an NVIDIA A100 GPU and used fixed random seeds for reproducibility.
-The source code for RM training and inference is publicly available on GitHub (\url{https://github.com/takanori-ugai/Adaptive-RAG-Configuration-Selection}).
+NaiveRAG uses LangChain\footnote{\url{https://www.langchain.com/}}; LightRAG and GraphRAG use their public repositories\footnote{\url{https://github.com/HKUDS/LightRAG/}}\footnote{\url{https://github.com/microsoft/graphrag/}}. spaCy\footnote{\url{https://spacy.io/}} provides token counts, dependency parsing, and named entities; YAKE\footnote{\url{http://yake.inesctec.pt/}} extracts keywords. Experiments use an NVIDIA A100 GPU and fixed random seeds. RM training and inference code is public\footnote{\url{https://github.com/takanori-ugai/Adaptive-RAG-Configuration-Selection}}.

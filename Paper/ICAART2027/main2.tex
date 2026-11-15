@@ -33,6 +33,13 @@
 \usepackage{arydshln}
 \usepackage{xurl}
 \usepackage{SCITEPRESS}     % Please add other packages that you may need BEFORE the SCITEPRESS.sty package.
+% Slightly extend the text area to retain analysis within eight pages.
+\addtolength{\textheight}{3mm}
+% Reduce only the space before section and subsection headings.
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{\z@}{-20pt plus -1pt minus -1pt}{12pt plus 1pt minus 1pt}{\Large\bf\raggedright}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}{-9pt plus -1pt minus -1pt}{11pt plus 1pt minus 1pt}{\large\bf\raggedright}}
+\makeatother
 
 \begin{document}
 
@@ -62,11 +69,13 @@
 This study is based on results obtained from a project under the Programs for Bridging the Gap between R\&D and the IDeal Society (Society 5.0) and Generating Economic and Social Value (BRIDGE),
 “R7-H05: Demonstration, Research, and Development for Safety in AI and Robotics Fields / Research and Development for Strengthening AI Safety in Industrial Domains”,
 implemented by the Cabinet Office, Government of Japan.
-And also this study is supported by JSPS KAKENHI Grant Numbers 23K11221 and 25K03232.
+This study was also supported by JSPS KAKENHI Grant Numbers 23K11221 and 25K03232.
 %This work was supported in part by New Energy and Industrial Technology Development Organization (NEDO) under Grant Numbers JPNP20006 and JPNP25006, and by JSPS KAKENHI Grant Numbers 23K11221 and 25K03232.
 
 \bibliographystyle{apalike}
-{\small
-\bibliography{references}}
+\begingroup
+\small
+\bibliography{references}
+\endgroup
 
 \end{document}
