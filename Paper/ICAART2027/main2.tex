@@ -27,7 +27,6 @@
 \newcolumntype{P}[1]{>{\centering\arraybackslash}m{#1}}
 \usepackage{doi}
 \usepackage{multirow}
-\usepackage{siunitx}
 %\usepackage{pdfpages}
 \usepackage{threeparttable}
 \usepackage{arydshln}
@@ -37,7 +36,7 @@
 \addtolength{\textheight}{3mm}
 % Reduce only the space before section and subsection headings.
 \makeatletter
-\renewcommand{\section}{\@startsection{section}{1}{\z@}{-20pt plus -1pt minus -1pt}{12pt plus 1pt minus 1pt}{\Large\bf\raggedright}}
+\renewcommand{\section}{\@startsection{section}{1}{\z@}{-20pt plus -1pt minus -1pt}{12pt plus 1pt minus 7pt}{\Large\bf\raggedright}}
 \renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}{-9pt plus -1pt minus -1pt}{11pt plus 1pt minus 1pt}{\large\bf\raggedright}}
 \makeatother
 
@@ -46,7 +45,7 @@
 \title{Adaptive RAG Configuration Selection Based on Question and Document Features Considering Cost and Accuracy}
 
 %\author{anonymous for review}
-\author{\authorname{Fumikatsu Anaguchi\sup{1}, Sudesna Chakraborty\sup{1}, Takeshi Morita\sup{1,2}, Aoi Ohta\sup{2}, Masaki Asada\sup{2}, Shusaku Egami\sup{2}, Takanori Ugai\sup{2} and Masahiro Hamasaki\sup{2}}
+\author{\authorname{Fumikatsu Anaguchi\sup{1,2}, Sudesna Chakraborty\sup{1}, Takeshi Morita\sup{1,2}, Aoi Ohta\sup{2}, Masaki Asada\sup{2}, \\Shusaku Egami\sup{2}, Takanori Ugai\sup{2} and Masahiro Hamasaki\sup{2}}
 \affiliation{\sup{1}Aoyama Gakuin University, Japan}
 \affiliation{\sup{2}National Institute of Advanced Industrial Science and Technology (AIST), Japan}
 \email{morita@it.aoyama.ac.jp}
@@ -54,7 +53,7 @@
 
 \keywords{Retrieval-Augmented Generation, Graph-Based RAG, Adaptive RAG, Learning to Rank, Large Language Model.}
 
-\abstract{Large language models (LLMs) may generate unsupported information, while retrieval-augmented generation (RAG) provides external context to support question answering. Because RAG configurations differ in response quality and execution time, selecting a configuration for each query is a practical systems problem. We study an offline learning-to-rank method that uses query and document features to rank 96 heterogeneous RAG configurations and combines predicted ranks according to user-defined priorities for precision, recall, $F_1$, and execution time. On four QA datasets with 80 evaluation questions, the balanced policy achieved BERTScore $F_1$ of 43.58\% and mean execution time of 1.43 s, close to the Most Frequent Setting baseline (43.55\% and 1.41 s). The proposed policies showed higher BERTScore and lower execution time than our Adaptive-RAG implementation; paired Wilcoxon tests were conducted for these comparisons. The results indicate that offline ranking can support preference-conditioned configuration selection in this evaluation, while gains over a strong fixed setting remain limited and the small evaluation set does not establish broad superiority.}
+\abstract{Large language models (LLMs) may generate unsupported information, while retrieval-augmented generation (RAG) provides external context to support question answering. Because RAG configurations differ in response quality and execution time, selecting a configuration for each question is a practical systems problem. We study an offline learning-to-rank method that uses question and document features to rank 96 heterogeneous RAG configurations and combines predicted ranks according to user-defined priorities for BERTScore precision, recall, and $F_1$ (B-$F_1$), and execution time. On four QA datasets with 80 evaluation questions, the balanced policy achieved B-$F_1$ of 43.58\% and mean execution time of 1.43 s, close to the Most Frequent Setting baseline (43.55\% and 1.41 s). The proposed policies showed higher B-$F_1$ and lower execution time than our Adaptive-RAG implementation; paired Wilcoxon tests were conducted for these comparisons. The results indicate that offline ranking can support preference-conditioned configuration selection in this evaluation, while gains over a strong fixed setting remain limited and the small evaluation set does not establish broad superiority.}
 
 \onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
 
@@ -65,13 +64,13 @@
 \input{ICAART2027/sec5}
 \input{ICAART2027/sec6}
 
+\vspace{-3pt}
 \section*{\uppercase{Acknowledgements}}
-This study is based on results obtained from a project under the Programs for Bridging the Gap between R\&D and the IDeal Society (Society 5.0) and Generating Economic and Social Value (BRIDGE),
-“R7-H05: Demonstration, Research, and Development for Safety in AI and Robotics Fields / Research and Development for Strengthening AI Safety in Industrial Domains”,
-implemented by the Cabinet Office, Government of Japan.
+This study is based on results obtained from the BRIDGE Program (R7-H05), implemented by the Cabinet Office, Government of Japan.
 This study was also supported by JSPS KAKENHI Grant Numbers 23K11221 and 25K03232.
 %This work was supported in part by New Energy and Industrial Technology Development Organization (NEDO) under Grant Numbers JPNP20006 and JPNP25006, and by JSPS KAKENHI Grant Numbers 23K11221 and 25K03232.
 
+\vspace{-3pt}
 \bibliographystyle{apalike}
 \begingroup
 \small

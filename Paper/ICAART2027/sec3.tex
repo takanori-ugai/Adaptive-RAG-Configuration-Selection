@@ -9,19 +9,19 @@
 \centering\includegraphics[width=\linewidth]{figures/Fig2}
 \caption{Configuration selection.}\label{reasoning}
 \end{subfigure}
-\caption{Training and inference. Empirical objective ranks supervise four rankers; user priorities combine their predictions at selection time.}
+\caption{Training and inference. Empirical objective ranks supervise four rankers; user priorities combine their predictions at selection time. F1-score RM denotes the B-$F_1$ ranker.}
 \label{workflow}
 \end{figure*}
 The method trains one ranking model (RM) per objective and combines their predicted rankings at inference time (Figure~\ref{workflow}). Offline training executes the candidate configurations on training questions, records response quality and execution time, and derives objective-specific rank labels.
 
 \subsection{Features and Configuration Space} \label{sec3.1}
-Each RM receives 13 features: seven query/document features and six configuration parameters. The query surface features are token count, maximum dependency-tree depth, and query type; the document surface feature is token count. Query type is assigned by rules on the lowercased first word and keywords: auxiliary verbs or forms of ``be'' indicate truth-value verification, wh-words indicate fact extraction, ``or'' indicates selection, and unmatched queries indicate passage generation. Semantic features are cosine similarities between query and document representations at three levels: full text, concatenated extracted keywords, and extracted named entities. The feature set was selected heuristically using ranking performance; Section~\ref{sec5.5} reports the ablation.
+Each RM receives 13 features: seven question/document features and six configuration parameters. The question surface features are token count, maximum dependency-tree depth, and question type; the document surface feature is token count. Question type is assigned by rules on the lowercased first word and keywords: auxiliary verbs or forms of ``be'' indicate truth-value verification, wh-words indicate fact extraction, ``or'' indicates selection, and unmatched questions indicate passage generation. Semantic features are cosine similarities between question and document representations at three levels: full text, concatenated extracted keywords, and extracted named entities. The feature set was selected heuristically using ranking performance; Section~\ref{sec5.5} reports the ablation.
 
-Dependency-tree depth is the longest path from the root token. Query length can reflect multiple conditions, while tree depth captures nested modifiers. Document token count describes input volume, which can interact with chunking and synthesis choices; query type summarizes the expected answer form.
+Dependency-tree depth is the longest path from the root token. Question length can reflect multiple conditions, while tree depth captures nested modifiers. Document token count describes input volume, which can interact with chunking and synthesis choices; question type summarizes the expected answer form.
 
 Full-text cosine similarity measures global semantic alignment. Keyword similarity compares concatenated keyword representations to focus on salient content, while entity similarity compares extracted entities such as people, organizations, and locations. These complementary relevance cues do not explicitly represent cross-document dependencies. High similarity can therefore coexist with a need for multi-step reasoning, as illustrated by the failure case in Section~\ref{sec5.7}.
 
-The document input $d$ is query-associated text supplied to the feature extractor. Relevant text must therefore be available at selection time: the selector does not itself retrieve or prepare this input. Its acquisition, preparation, and feature-extraction costs were not separately measured.
+The document input $d$ is question-associated text supplied to the feature extractor. Relevant text must therefore be available at selection time: the selector does not itself retrieve or prepare this input. Its acquisition, preparation, and feature-extraction costs were not separately measured.
 
 Table~\ref{hyperparameters_in_RAG} defines the 96 candidate configurations. Retrieval setting (RS) groups NaiveRAG's synthesis chain type with graph-based retrieval modes. The paradigms are NaiveRAG~\cite{Lewis20}, LightRAG~\cite{Guo25}, and GraphRAG~\cite{edge25}; generator models (GM) are Llama 3.1 8B~\cite{Meta24} and Qwen3 14B~\cite{qwen25}. Embedding models (EM) are nomic-embed-text~\cite{nussbaum24} and mxbai-embed-large\footnote{\url{https://www.mixedbread.com/blog/mxbai-embed-large-v1/}}.
 
@@ -44,33 +44,31 @@ CO & 50/100 & 100/250 \\
 \end{table}
 
 \subsection{Training and Selection} \label{sec3.2}\label{sec3.3}
-For each training query-document pair, we execute all configurations and record the query ID, parameters, BERTScore precision, recall, $F_1$~\cite{zhang20}, and execution time. Dense ranks are assigned separately for each query and objective, with rank 1 best and equal measured values sharing a rank. These ranks are converted to 64-level relevance gains for training and evaluation (Section~\ref{sec4.6}). Four RMs learn to rank configurations from the features rather than predict absolute metric values. This formulation targets relative candidate quality across queries with different difficulty levels.
-
-Each model predicts an objective-specific ordering over the same candidates. Reciprocal-rank aggregation combines these orderings on a common scale, allowing priorities to change without retraining.
+For each training question-document pair, we execute all configurations and record the question ID, parameters, BERTScore precision, recall, and B-$F_1$~\cite{zhang20}, and execution time. Within each question and objective, dense ranks start at 1 (best) and give ties the same rank. We convert them to 64-level relevance gains (Section~\ref{sec4.6}) to train one RM per objective. At inference, a weighted reciprocal-rank score combines the four predicted orderings and lets users change priorities without retraining.
 
 \label{sec3.4}
-For query $q$, document $d$, and configuration $c\in\mathcal{C}$, $|\mathcal{C}|=96$, the selection score is
+For question $q$, document $d$, and configuration $c\in\mathcal{C}$, $|\mathcal{C}|=96$, the selection score is
 \begin{equation}
 \begin{aligned}
 S(c;q,d;W)={}&\frac{W_{\mathrm{pre}}}{P_{\mathrm{rank}}(c;q,d)}+\frac{W_{\mathrm{rec}}}{R_{\mathrm{rank}}(c;q,d)}\\
-&+\frac{W_{\mathrm{f_1}}}{{F_1}_{\mathrm{rank}}(c;q,d)}+\frac{W_{\mathrm{time}}}{T_{\mathrm{rank}}(c;q,d)},
+&+\frac{W_{\mathrm{f_1}}}{F_{1,\mathrm{rank}}(c;q,d)}+\frac{W_{\mathrm{time}}}{T_{\mathrm{rank}}(c;q,d)},
 \end{aligned}\label{eq1}
 \end{equation}
-where ranks are integers from 1 (best) to 96, and
+Here $P_{\mathrm{rank}}$, $R_{\mathrm{rank}}$, $F_{1,\mathrm{rank}}$, and $T_{\mathrm{rank}}$ are the predicted ranks of $c$ for BERTScore precision, BERTScore recall, B-$F_1$, and execution time, respectively, given $(q,d)$. Ranks range from 1 (best) to 96. The weight tuple $W=(W_{\mathrm{pre}},W_{\mathrm{rec}},W_{\mathrm{f_1}},W_{\mathrm{time}})$ assigns one weight to each objective in that order, with
 \begin{equation}
 \sum_{i\in\{\mathrm{pre,rec,f_1,time}\}}W_i=1,\qquad W_i\geq0.
 \label{eq2}
 \end{equation}
-Reciprocal ranks place the four objectives on a common scale and emphasize the highest-ranked candidates. The configuration with the largest score is selected. More generally, the shortlist is
+Reciprocal ranks put the objectives on a common scale and emphasize top candidates. The top-scoring configuration is the single recommendation. The shortlist is
 \begin{equation}
 \mathcal{C}_K(q,d;W)=\arg\max_{c\in\mathcal{C}}^{(K)} S(c;q,d;W),
 \label{eq3}
 \end{equation}
-where $\arg\max^{(K)}$ extracts the $K$ highest-scoring configurations. For an $F_1$-oriented oracle-assisted evaluation, the retrospectively chosen configuration is
+where $\arg\max^{(K)}$ extracts the $K$ highest-scoring configurations. For the B-$F_1$-oriented oracle-assisted evaluation with reference answer $a_{\mathrm{ref}}$ for $q$, we select
 \begin{equation}
-c^*=\arg\max_{c\in\mathcal{C}_K(q,d;W)}\mathrm{BERTScore}_{F_1}(c).
+c^*=\arg\max_{c\in\mathcal{C}_K(q,d;W)}\mathrm{BERTScore}_{F_1}(c,q,d,a_{\mathrm{ref}}).
 \label{eq4}
 \end{equation}
-The candidate set depends on predicted ranks, while this final oracle decision depends on measured answer quality. Precision- and recall-oriented evaluations use their corresponding reference-based metrics; the time-oriented evaluation minimizes measured execution time.
+This score compares the answer generated by $c$ for $(q,d)$ with $a_{\mathrm{ref}}$. Precision- and recall-oriented evaluations use their corresponding reference-based metrics; the time-oriented evaluation minimizes measured execution time.
 
-Our top-$K$ evaluation executes every shortlisted candidate and retrospectively selects the best observed target metric, using reference answers for quality-oriented policies. It measures oracle-assisted shortlist potential, not reference-free user selection. The sum of candidate execution times is cumulative computational time; it is distinct from both the selected candidate's time and wall-clock latency, which depends on scheduling and parallelism.
+The top-$K$ evaluation executes every shortlisted candidate and uses reference answers for quality-oriented selection. Cumulative time sums all candidate runs. The selected candidate's time measures one run, and wall-clock latency depends on scheduling and parallelism.
